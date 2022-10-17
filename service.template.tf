@@ -1,7 +1,7 @@
 
 module "monitoring-{{aws_app_identifier}}" {
   count = var.monitoring_enabled ? 1 : 0
-  source = "monitoring"
+  source = "./monitoring"
   ecs_cluster_name = aws_ecs_cluster.app.name
   ecs_service_name = "{{aws_app_identifier}}"
   alarms_sns_topic_arn = var.alarms_sns_topic_arn
