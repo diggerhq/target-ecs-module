@@ -16,10 +16,6 @@ variable "tags" {
   type = map(string)
 }
 
-variable "default_tags" {
-  type = map(string)
-}
-
 # The application's name
 variable "app" {
 }
