@@ -11,7 +11,7 @@ module "monitoring-{{aws_app_identifier}}" {
 {% if environment_config.tcp_service %}
   
   module "service-{{aws_app_identifier}}" {
-    source = "../fargate-service-tcp"
+    source = "./fargate-service-tcp"
 
     ecs_cluster = aws_ecs_cluster.app
     service_name = "{{aws_app_identifier}}"
@@ -50,7 +50,7 @@ module "monitoring-{{aws_app_identifier}}" {
 
 {% elif load_balancer %}
   module "service-{{aws_app_identifier}}" {
-    source = "../module-fargate-service"
+    source = "./module-fargate-service"
 
     ecs_cluster = aws_ecs_cluster.app
     service_name = "{{aws_app_identifier}}"
@@ -171,7 +171,7 @@ module "monitoring-{{aws_app_identifier}}" {
   }
 {% else %}
   module "service-{{aws_app_identifier}}" {
-    source = "../module-fargate-service-nolb"
+    source = "./module-fargate-service-nolb"
 
     ecs_cluster = aws_ecs_cluster.app
     service_name = "{{aws_app_identifier}}"
