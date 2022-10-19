@@ -22,3 +22,4 @@ environment_config.dggr_acm_certificate_arn
 environment_config.dns_zone_id
 environment_config.hostname
 environment_config.dggr_zone_id
+tcp_service
