@@ -6,15 +6,15 @@ Jinja parameters:
 aws_app_identifier
 internal
 health_check
-environment_config.health_check_interval
 container_port
-aws_app_identifier
 launch_type
 task_cpu
 task_memory
+tcp_service 
+health_check_matcher
+environment_config.health_check_interval
 environment_config.health_check_grace_period_seconds
 environment_config.lb_protocol
-health_check_matcher
 environment_config.ecs_autoscale_min_instances
 environment_config.ecs_autoscale_max_instances
 environment_config.lb_ssl_certificate_arn
@@ -22,4 +22,3 @@ environment_config.dggr_acm_certificate_arn
 environment_config.dns_zone_id
 environment_config.hostname
 environment_config.dggr_zone_id
-tcp_service
