@@ -48,8 +48,8 @@ resource "aws_ecs_task_definition" "app" {
         "hostPort": ${var.container_port}
       }
     ],
-    "environment": ${jsondecode(var.task_definition_environment)},
-    "secrets" : ${jsondecode(var.task_definition_secrets)},
+    "environment": ${var.task_definition_environment},
+    "secrets" : ${var.task_definition_secrets},
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
