@@ -1,20 +1,24 @@
 
-module "monitoring-{{aws_app_identifier}}" {
+locals {
+  aws_app_identifier = "{{aws_app_identifier}}"
+}
+
+module "monitoring" {
   count = var.monitoring_enabled ? 1 : 0
   source = "./monitoring"
   ecs_cluster_name = aws_ecs_cluster.app.name
-  ecs_service_name = "{{aws_app_identifier}}"
+  ecs_service_name = local.aws_app_identifier
   alarms_sns_topic_arn = var.alarms_sns_topic_arn
   tags = var.tags
 }
 
 {% if tcp_service %}
   
-  module "service-{{aws_app_identifier}}" {
+  module "service" {
     source = "./fargate-service-tcp"
 
     ecs_cluster = aws_ecs_cluster.app
-    service_name = "{{aws_app_identifier}}"
+    service_name = local.aws_app_identifier
     region = var.region
     service_vpc = aws_vpc.vpc
     service_security_groups = [aws_security_group.ecs_service_sg.id]
@@ -30,8 +34,8 @@ module "monitoring-{{aws_app_identifier}}" {
     health_check_interval = "{{health_check_interval}}"
     {% endif %}
 
-    container_port = "{{container_port}}"
-    container_name = "{{aws_app_identifier}}"
+    container_port = var.container_port
+    container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
 
     default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
@@ -39,20 +43,20 @@ module "monitoring-{{aws_app_identifier}}" {
     {% if task_memory %}task_memory = "{{task_memory}}" {% endif %}
   }
 
-  output "{{aws_app_identifier}}_docker_registry" {
-    value = module.service-{{aws_app_identifier}}.docker_registry
+  output "docker_registry" {
+    value = module.service.docker_registry
   }
 
-  output "{{aws_app_identifier}}_lb_dns" {
-    value = module.service-{{aws_app_identifier}}.lb_dns
+  output "lb_dns" {
+    value = module.service.lb_dns
   }
 
 {% elif load_balancer %}
-  module "service-{{aws_app_identifier}}" {
+  module "service" {
     source = "./module-fargate-service"
 
     ecs_cluster = aws_ecs_cluster.app
-    service_name = "{{aws_app_identifier}}"
+    service_name = local.aws_app_identifier
     region = var.region
     service_vpc = local.vpc
     service_security_groups = [aws_security_group.ecs_service_sg.id]
@@ -88,8 +92,8 @@ module "monitoring-{{aws_app_identifier}}" {
       ecs_autoscale_max_instances = "{{ecs_autoscale_max_instances}}"
     {% endif %}
 
-    container_port = "{{container_port}}"
-    container_name = "{{aws_app_identifier}}"
+    container_port = var.container_port
+    container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
 
     default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
@@ -105,7 +109,7 @@ module "monitoring-{{aws_app_identifier}}" {
 
 
   {% if create_dns_record %} 
-    resource "aws_route53_record" "{{aws_app_identifier}}_r53" {
+    resource "aws_route53_record" "r53" {
       zone_id = "{{dns_zone_id}}"
       name    = "{{aws_app_identifier}}.{{hostname}}"
       type    = "A"
@@ -117,34 +121,34 @@ module "monitoring-{{aws_app_identifier}}" {
       }
     }
 
-    output "{{aws_app_identifier}}_custom_domain" {
+    output "custom_domain" {
         value = aws_route53_record.{{aws_app_identifier}}_r53.fqdn
     }
 
   {% endif %}
 
-  output "{{aws_app_identifier}}_docker_registry" {
-    value = module.service-{{aws_app_identifier}}.docker_registry
+  output "docker_registry" {
+    value = module.service.docker_registry
   }
 
-  output "{{aws_app_identifier}}_lb_dns" {
-    value = module.service-{{aws_app_identifier}}.lb_dns
+  output "lb_dns" {
+    value = module.service.lb_dns
   }
 
-  output "{{aws_app_identifier}}_lb_arn" {
-    value = module.service-{{aws_app_identifier}}.lb_arn
+  output "lb_arn" {
+    value = module.service.lb_arn
   }
 
-  output "{{aws_app_identifier}}_lb_http_listener_arn" {
-    value = module.service-{{aws_app_identifier}}.lb_http_listener_arn
+  output "lb_http_listener_arn" {
+    value = module.service.lb_http_listener_arn
   }
 
 {% else %}
-  module "service-{{aws_app_identifier}}" {
+  module "service" {
     source = "./module-fargate-service-nolb"
 
     ecs_cluster = aws_ecs_cluster.app
-    service_name = "{{aws_app_identifier}}"
+    service_name = local.aws_app_identifier
     region = var.region
     service_vpc = local.vpc
     subnet_ids = var.public_subnets
@@ -153,7 +157,7 @@ module "monitoring-{{aws_app_identifier}}" {
     internal={{ internal }}
     {%- endif %}
 
-    container_name = "{{aws_app_identifier}}"
+    container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
     default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
     tags = var.tags
@@ -173,11 +177,11 @@ module "monitoring-{{aws_app_identifier}}" {
     {% endif %}
   }
 
-  output "{{aws_app_identifier}}_docker_registry" {
-    value = module.service-{{aws_app_identifier}}.docker_registry
+  output "docker_registry" {
+    value = module.service.docker_registry
   }
 
-  output "{{aws_app_identifier}}_lb_dns" {
+  output "lb_dns" {
     value = ""
   }
 
