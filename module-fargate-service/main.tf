@@ -48,16 +48,8 @@ resource "aws_ecs_task_definition" "app" {
         "hostPort": ${var.container_port}
       }
     ],
-    "environment": [
-      {
-        "name": "PORT",
-        "value": "${var.container_port}"
-      },
-      {
-        "name": "HEALTHCHECK",
-        "value": "${var.health_check}"
-      }
-    ],
+    "environment": ${jsondecode(var.task_definition_environment)},
+    "secrets" : ${jsondecode(var.task_definition_secrets)},
     "logConfiguration": {
       "logDriver": "awslogs",
       "options": {
@@ -65,15 +57,7 @@ resource "aws_ecs_task_definition" "app" {
         "awslogs-region": "${var.region}",
         "awslogs-stream-prefix": "ecs"
       }
-    },
-    "mountPoints": [
-    %{for mountPoint in var.mountPoints}
-      {
-        "containerPath": "${mountPoint.path}",
-        "sourceVolume": "${mountPoint.volume}"
-      }
-    %{endfor}
-    ]
+    }
   }
 ]
 EOT
