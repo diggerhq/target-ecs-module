@@ -17,12 +17,12 @@ resource "aws_alb_listener" "http" {
 }
 
 resource "aws_lb_listener" "https" {
-  count = (var.lb_ssl_certificate_arn==null && var.dggr_acm_certificate_arn==null) ? 0 : 1
+  count = var.lb_ssl_certificate_arn==null ? 0 : 1
   load_balancer_arn = aws_alb.main.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.lb_ssl_certificate_arn==null ? var.dggr_acm_certificate_arn : var.lb_ssl_certificate_arn
+  certificate_arn   = var.lb_ssl_certificate_arn
   default_action {
     target_group_arn = aws_alb_target_group.main.id
     type             = "forward"
@@ -30,9 +30,9 @@ resource "aws_lb_listener" "https" {
 }
 
 resource "aws_lb_listener_certificate" "lb_listener_cert" {
-   count = (var.lb_ssl_certificate_arn==null && var.dggr_acm_certificate_arn==null) ? 0 : 1
+   count = var.lb_ssl_certificate_arn==null ? 0 : 1
    listener_arn = aws_lb_listener.https[0].arn
-   certificate_arn   = var.lb_ssl_certificate_arn==null ? var.dggr_acm_certificate_arn : var.lb_ssl_certificate_arn
+   certificate_arn   = var.lb_ssl_certificate_arn
 }
 
 resource "aws_security_group_rule" "ingress_lb_http" {

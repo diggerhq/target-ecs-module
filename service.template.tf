@@ -39,7 +39,6 @@ module "monitoring-{{aws_app_identifier}}" {
     {% if task_memory %}task_memory = "{{task_memory}}" {% endif %}
   }
 
-
   output "{{aws_app_identifier}}_docker_registry" {
     value = module.service-{{aws_app_identifier}}.docker_registry
   }
@@ -100,11 +99,6 @@ module "monitoring-{{aws_app_identifier}}" {
       lb_ssl_certificate_arn = "{{lb_ssl_certificate_arn}}"
     {% endif %}
 
-    # for *.dggr.app listeners
-    {% if dggr_acm_certificate_arn %}
-      dggr_acm_certificate_arn = "{{dggr_acm_certificate_arn}}"
-    {% endif %}
-
     {% if task_cpu %}task_cpu = "{{task_cpu}}" {% endif %}
     {% if task_memory %}task_memory = "{{task_memory}}" {% endif %}
   }
@@ -127,27 +121,6 @@ module "monitoring-{{aws_app_identifier}}" {
         value = aws_route53_record.{{aws_app_identifier}}_r53.fqdn
     }
 
-  {% endif %}
-
-
-  # *.dggr.app domains
-  {% if use_dggr_domain %} 
-    resource "aws_route53_record" "{{aws_app_identifier}}_dggr_r53" {
-      provider = aws.digger
-      zone_id = "{{dggr_zone_id}}"
-      name    = "{{aws_app_identifier}}.{{dggr_hostname}}"
-      type    = "A"
-
-      alias {
-        name                   = module.service-{{aws_app_identifier}}.lb_dns
-        zone_id                = module.service-{{aws_app_identifier}}.lb_zone_id
-        evaluate_target_health = false
-      }
-    }
-
-    output "{{aws_app_identifier}}_dggr_domain" {
-        value = aws_route53_record.{{aws_app_identifier}}_dggr_r53.fqdn
-    }
   {% endif %}
 
   output "{{aws_app_identifier}}_docker_registry" {

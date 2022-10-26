@@ -18,7 +18,5 @@ environment_config.lb_protocol
 environment_config.ecs_autoscale_min_instances
 environment_config.ecs_autoscale_max_instances
 environment_config.lb_ssl_certificate_arn
-environment_config.dggr_acm_certificate_arn
 environment_config.dns_zone_id
 environment_config.hostname
-environment_config.dggr_zone_id
