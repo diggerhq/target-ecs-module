@@ -14,6 +14,7 @@
 
 locals {
   awsloggroup = "/ecs/service/${var.service_name}"
+  container_image = aws_ecr_repository.app.repository_url
 }
 
 resource "aws_appautoscaling_target" "app_scale_target" {
@@ -39,7 +40,7 @@ resource "aws_ecs_task_definition" "app" {
 [
   {
     "name": "${var.container_name}",
-    "image": "${var.default_backend_image}",
+    "image": "${local.container_image}",
     "essential": true,
     "portMappings": [
       {
