@@ -13,7 +13,7 @@
  */
 
 locals {
-  awsloggroup = "/ecs/service/${var.service_name}"
+  awsloggroup     = "/ecs/service/${var.service_name}"
   container_image = aws_ecr_repository.app.repository_url
 }
 
@@ -90,7 +90,7 @@ resource "aws_ecs_service" "app" {
   network_configuration {
     security_groups  = concat([aws_security_group.nsg_task.id], var.service_security_groups)
     subnets          = var.subnet_ids
-    assign_public_ip = true
+    assign_public_ip = !var.internal
     # subnets         = split(",", var.private_subnets)
   }
 
