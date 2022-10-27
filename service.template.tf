@@ -101,7 +101,7 @@ module "monitoring" {
     task_definition_secrets = var.task_definition_secrets
     launch_type = "{{launch_type}}"
 
-    default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
+    default_backend_image = aws_ecr_repository.app.repository_url
     tags = var.tags
 
     {% if lb_ssl_certificate_arn %}
