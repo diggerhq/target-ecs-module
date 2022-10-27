@@ -25,6 +25,8 @@ variable "tags" {}
 # The loadbalancer subnets
 variable "subnet_ids" {}
 
+variable "alb_subnet_ids" {}
+
 # The port the load balancer will listen on
 variable "lb_port" {
   default = "80"
@@ -51,6 +53,10 @@ variable "lb_ssl_certificate_arn" {
 # also will determine which subnets will be used (public or private)
 variable "internal" {
   default = true
+}
+
+variable "alb_internal" {
+  default = false
 }
 
 # The amount time for Elastic Load Balancing to wait before changing the state of a deregistering target from draining to unused

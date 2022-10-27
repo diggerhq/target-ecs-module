@@ -60,11 +60,14 @@ module "monitoring" {
     region = var.region
     service_vpc = local.vpc
     service_security_groups = [aws_security_group.ecs_service_sg.id]
-    subnet_ids = var.public_subnets
+    subnet_ids = var.private_subnets
 
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
+
+    alb_internal = false
+    alb_subnet_ids = var.public_subnets
 
     health_check = "{{health_check}}"
 
