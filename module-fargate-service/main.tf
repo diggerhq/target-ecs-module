@@ -33,8 +33,7 @@ resource "aws_ecs_task_definition" "app" {
   memory                   = var.task_memory
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
 
-  # defined in role.tf
-  # task_role_arn = aws_iam_role.app_role.arn
+  task_role_arn = aws_iam_role.ecs_task_role.arn
 
   container_definitions = <<EOT
 [
@@ -91,7 +90,6 @@ resource "aws_ecs_service" "app" {
     security_groups  = concat([aws_security_group.nsg_task.id], var.service_security_groups)
     subnets          = var.subnet_ids
     assign_public_ip = !var.internal
-    # subnets         = split(",", var.private_subnets)
   }
 
   load_balancer {
@@ -100,19 +98,8 @@ resource "aws_ecs_service" "app" {
     container_port   = var.container_port
   }
 
-  # requires manual opt-in
-  # tags                    = var.tags
-  # enable_ecs_managed_tags = true
-  # propagate_tags          = "SERVICE"
-
   # workaround for https://github.com/hashicorp/terraform/issues/12634
   depends_on = [aws_alb_listener.http]
-
-  # [after initial apply] don't override changes made to task_definition
-  # from outside of terraform (i.e.; fargate cli)
-  lifecycle {
-    ignore_changes = [task_definition]
-  }
 }
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
@@ -130,6 +117,51 @@ data "aws_iam_policy_document" "assume_role_policy" {
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
+}
+
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "${var.service_name}_task_role"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+
+}
+
+resource "aws_iam_role_policy" "ecs_task_role_policy" {
+  name   = "${var.service_name}_task_role_policy"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+
+  role   = aws_iam_role.ecs_task_role.id
 }
 
 resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
