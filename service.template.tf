@@ -43,8 +43,8 @@ module "monitoring" {
     {% if task_memory %}task_memory = "{{task_memory}}" {% endif %}
   }
 
-  output "docker_registry" {
-    value = module.service.docker_registry
+  output "docker_registry_url" {
+    value = module.service.docker_registry_url
   }
 
   output "lb_dns" {
@@ -132,8 +132,8 @@ module "monitoring" {
 
   {% endif %}
 
-  output "docker_registry" {
-    value = module.service.docker_registry
+  output "docker_registry_url" {
+    value = module.service.docker_registry_url
   }
 
   output "lb_dns" {
@@ -182,8 +182,8 @@ module "monitoring" {
     {% endif %}
   }
 
-  output "docker_registry" {
-    value = module.service.docker_registry
+  output "docker_registry_url" {
+    value = module.service.docker_registry_url
   }
 
   output "lb_dns" {

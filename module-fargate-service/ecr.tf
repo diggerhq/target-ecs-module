@@ -6,12 +6,12 @@
 
 # create an ECR repo at the app/image level
 resource "aws_ecr_repository" "app" {
-  name                 = "${var.service_name}"
+  name                 = var.service_name
   image_tag_mutability = var.image_tag_mutability
   force_delete         = true
 }
 
-output "docker_registry" {
+output "docker_registry_url" {
   value = aws_ecr_repository.app.repository_url
 }
 

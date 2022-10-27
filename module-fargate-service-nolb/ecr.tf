@@ -11,7 +11,7 @@ resource "aws_ecr_repository" "app" {
   force_delete         = true
 }
 
-output "docker_registry" {
+output "docker_registry_url" {
   value = aws_ecr_repository.app.repository_url
 }
 
