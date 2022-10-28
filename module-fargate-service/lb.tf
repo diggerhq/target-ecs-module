@@ -115,20 +115,3 @@ resource "aws_s3_bucket_policy" "lb_access_logs" {
 }
 POLICY
 }
-
-# The load balancer DNS name
-output "lb_dns" {
-  value = aws_alb.main.dns_name
-}
-
-output "lb_arn" {
-  value = aws_alb.main.arn
-}
-
-output "lb_http_listener_arn" {
-  value = try(aws_alb_listener.http.arn, null)
-}
-
-output "lb_zone_id" {
-  value = aws_alb.main.zone_id
-}

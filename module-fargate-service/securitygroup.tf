@@ -53,6 +53,3 @@ resource "aws_security_group_rule" "ecs_task_egress_rule" {
   security_group_id = aws_security_group.ecs_task_sg.id
 }
 
-output "task_security_group_id" {
-  value = aws_security_group.ecs_task_sg.id
-}
