@@ -21,7 +21,7 @@ module "monitoring" {
     service_name = local.aws_app_identifier
     region = var.region
     service_vpc = aws_vpc.vpc
-    service_security_groups = [aws_security_group.ecs_service_sg.id]
+    service_security_groups = []
     subnet_ids = var.public_subnets
     vpcCIDRblock = var.vpcCIDRblock
 
@@ -59,7 +59,7 @@ module "monitoring" {
     service_name = local.aws_app_identifier
     region = var.region
     service_vpc = local.vpc
-    service_security_groups = [aws_security_group.ecs_service_sg.id]
+    service_security_groups = []
     subnet_ids = var.private_subnets
 
     {%- if internal is defined %}
