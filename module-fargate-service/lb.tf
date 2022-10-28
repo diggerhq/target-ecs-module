@@ -11,7 +11,7 @@ resource "aws_alb" "main" {
   # launch lbs in public or private subnets based on "internal" variable
   internal        = var.alb_internal
   subnets         = var.alb_subnet_ids
-  security_groups = [aws_security_group.nsg_lb.id]
+  security_groups = [aws_security_group.lb_sg.id]
   tags            = var.tags
 
   # enable access logs in order to get support from aws

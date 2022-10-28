@@ -42,7 +42,7 @@ resource "aws_security_group_rule" "ingress_lb_http" {
   to_port           = var.lb_port
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.nsg_lb.id
+  security_group_id = aws_security_group.lb_sg.id
 }
 
 resource "aws_security_group_rule" "ingress_lb_https" {
@@ -52,6 +52,6 @@ resource "aws_security_group_rule" "ingress_lb_https" {
   to_port           = var.lb_ssl_port
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.nsg_lb.id
+  security_group_id = aws_security_group.lb_sg.id
 }
 
