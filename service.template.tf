@@ -148,6 +148,10 @@ module "monitoring" {
     value = module.service.lb_http_listener_arn
   }
 
+  output "ecs_task_security_group_id" {
+    value = module.service.ecs_task_security_group_id
+  }
+
 {% else %}
   module "service" {
     source = "./module-fargate-service-nolb"
