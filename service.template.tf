@@ -34,6 +34,10 @@ module "monitoring" {
     health_check_interval = "{{health_check_interval}}"
     {% endif %}
 
+    {% if health_check_matcher %}
+    health_check_matcher = "{{health_check_matcher}}"
+    {% endif %}
+
     container_port = var.container_port
     container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
