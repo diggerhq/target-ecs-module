@@ -88,7 +88,7 @@ variable "health_check_grace_period_seconds" {
 
 # What HTTP response code to listen for
 variable "health_check_matcher" {
-  default = "200"
+  default = "200-499"
 }
 
 variable "lb_access_logs_expiration_days" {
