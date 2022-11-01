@@ -68,7 +68,9 @@ module "monitoring" {
     internal={{ internal }}
     {%- endif %}
 
-    alb_internal = false
+    {%- if alb_internal is defined %}
+    alb_internal={{ alb_internal }}
+    {%- endif %}
     alb_subnet_ids = var.public_subnets
 
     health_check = "{{health_check}}"
