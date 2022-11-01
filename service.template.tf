@@ -1,6 +1,6 @@
 
 locals {
-  aws_app_identifier = "{{aws_app_identifier}}"
+  aws_app_identifier = var.aws_app_identifier
 }
 
 module "monitoring" {

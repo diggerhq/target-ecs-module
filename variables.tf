@@ -53,3 +53,5 @@ variable "ecs_task_policy_json" {
 
 variable "ecs_task_execution_policy_json" {
 }
+
+variable "aws_app_identifier" {}
