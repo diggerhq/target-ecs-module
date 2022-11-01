@@ -61,6 +61,8 @@ module "monitoring" {
     service_vpc = local.vpc
     service_security_groups = []
     subnet_ids = var.private_subnets
+    ecs_task_policy_json = var.ecs_task_policy_json
+    ecs_task_execution_policy_json = var.ecs_task_execution_policy_json
 
     {%- if internal is defined %}
     internal={{ internal }}
