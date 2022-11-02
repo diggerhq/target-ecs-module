@@ -30,6 +30,7 @@ module "monitoring" {
 EOT
     )
     {% endif %}
+
     {% if secret_keys %}
     secrets = [for secret_key in jsonencode(<<EOT
         {{ secret_keys | tojson }}
@@ -39,6 +40,7 @@ EOT
     valueFrom = aws_ssm_parameter.secret_key.arn
     }]
     {% endif %}
+
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
@@ -79,11 +81,14 @@ EOT
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
+
     {% if environment_variables %}
     environment_variables = jsondecode(<<EOT
     {{ environment_variables | tojson}}
 EOT
     )
+    {% endif %}
+
     {% if secret_keys %}
     secrets = [for secret_key in jsonencode(<<EOT
     {{ secret_keys | tojson }}
@@ -210,12 +215,14 @@ EOT
     {% if ecs_autoscale_max_instances %}
       ecs_autoscale_max_instances = "{{ecs_autoscale_max_instances}}"
     {% endif %}
+
     {% if environment_variables %}
     environment_variables = jsondecode(<<EOT
             {{ environment_variables | tojson}}
 EOT
     )
     {% endif %}
+
     {% if secret_keys %}
     secrets = [for secret_key in jsonencode(<<EOT
         {{ secret_keys | tojson }}
