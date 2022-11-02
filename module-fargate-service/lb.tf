@@ -6,12 +6,12 @@
 
 
 resource "aws_alb" "main" {
-  name = "${var.service_name}"
+  name = var.service_name
 
   # launch lbs in public or private subnets based on "internal" variable
-  internal        = var.internal
-  subnets         = var.subnet_ids
-  security_groups = [aws_security_group.nsg_lb.id]
+  internal        = var.alb_internal
+  subnets         = var.alb_subnet_ids
+  security_groups = [aws_security_group.lb_sg.id]
   tags            = var.tags
 
   # enable access logs in order to get support from aws
@@ -22,7 +22,7 @@ resource "aws_alb" "main" {
 }
 
 resource "aws_alb_target_group" "main" {
-  name                 = "${var.service_name}"
+  name                 = var.service_name
   port                 = var.lb_port
   protocol             = var.lb_protocol
   vpc_id               = var.service_vpc.id
@@ -52,7 +52,7 @@ data "aws_elb_service_account" "main" {
 
 # bucket for storing ALB access logs
 resource "aws_s3_bucket" "lb_access_logs" {
-  bucket_prefix = "${var.service_name}"
+  bucket_prefix = var.service_name
   tags          = var.tags
   force_destroy = true
 }
@@ -114,21 +114,4 @@ resource "aws_s3_bucket_policy" "lb_access_logs" {
   ]
 }
 POLICY
-}
-
-# The load balancer DNS name
-output "lb_dns" {
-  value = aws_alb.main.dns_name
-}
-
-output "lb_arn" {
-  value = aws_alb.main.arn
-}
-
-output "lb_http_listener_arn" {
-  value = try(aws_alb_listener.http.arn, null)
-}
-
-output "lb_zone_id" {
-  value = aws_alb.main.zone_id
 }

@@ -9,12 +9,6 @@ resource "aws_ecs_cluster" "app" {
   tags = var.tags
 }
 
-resource "aws_security_group" "ecs_service_sg" {
-  name_prefix = var.ecs_cluster_name
-  description = "Security group shared by all ECS services"
-  vpc_id      = var.vpc_id
-}
-
 output "ecs_cluster_name" {
   value = aws_ecs_cluster.app.name
 }

@@ -58,16 +58,16 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 resource "aws_ecs_service" "app" {
-  name                = var.service_name
-  cluster             = var.ecs_cluster.id
-  launch_type         = var.launch_type
-  task_definition     = aws_ecs_task_definition.app.arn
-  desired_count       = var.replicas
+  name            = var.service_name
+  cluster         = var.ecs_cluster.id
+  launch_type     = var.launch_type
+  task_definition = aws_ecs_task_definition.app.arn
+  desired_count   = var.replicas
 
   network_configuration {
-    security_groups = []
-    subnets = var.subnet_ids
-    assign_public_ip = true
+    security_groups  = []
+    subnets          = var.subnet_ids
+    assign_public_ip = !var.internal
   }
 
   # workaround for https://github.com/hashicorp/terraform/issues/12634

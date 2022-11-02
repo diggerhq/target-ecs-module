@@ -21,7 +21,7 @@ module "monitoring" {
     service_name = local.aws_app_identifier
     region = var.region
     service_vpc = aws_vpc.vpc
-    service_security_groups = [aws_security_group.ecs_service_sg.id]
+    service_security_groups = []
     subnet_ids = var.public_subnets
     vpcCIDRblock = var.vpcCIDRblock
     {% if environment_variables %}
@@ -45,8 +45,8 @@ module "monitoring" {
     {% if task_memory %}task_memory = "{{task_memory}}" {% endif %}
   }
 
-  output "docker_registry" {
-    value = module.service.docker_registry
+  output "docker_registry_url" {
+    value = module.service.docker_registry_url
   }
 
   output "lb_dns" {
@@ -61,12 +61,15 @@ module "monitoring" {
     service_name = local.aws_app_identifier
     region = var.region
     service_vpc = local.vpc
-    service_security_groups = [aws_security_group.ecs_service_sg.id]
-    subnet_ids = var.public_subnets
+    service_security_groups = []
+    subnet_ids = var.private_subnets
 
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
+
+    alb_internal = false
+    alb_subnet_ids = var.public_subnets
 
     health_check = "{{health_check}}"
 
@@ -96,6 +99,8 @@ module "monitoring" {
 
     container_port = var.container_port
     container_name = local.aws_app_identifier
+    task_definition_environment = var.task_definition_environment
+    task_definition_secrets = var.task_definition_secrets
     launch_type = "{{launch_type}}"
 
     default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
@@ -129,8 +134,8 @@ module "monitoring" {
 
   {% endif %}
 
-  output "docker_registry" {
-    value = module.service.docker_registry
+  output "docker_registry_url" {
+    value = module.service.docker_registry_url
   }
 
   output "lb_dns" {
@@ -143,6 +148,10 @@ module "monitoring" {
 
   output "lb_http_listener_arn" {
     value = module.service.lb_http_listener_arn
+  }
+
+  output "ecs_task_security_group_id" {
+    value = module.service.ecs_task_security_group_id
   }
 
 {% else %}
@@ -179,8 +188,8 @@ module "monitoring" {
     {% endif %}
   }
 
-  output "docker_registry" {
-    value = module.service.docker_registry
+  output "docker_registry_url" {
+    value = module.service.docker_registry_url
   }
 
   output "lb_dns" {
