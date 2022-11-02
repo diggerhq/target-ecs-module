@@ -206,7 +206,7 @@ resource "aws_cloudwatch_log_group" "logs" {
 }
 
 resource "aws_ssm_parameter" "secrets" {
-  for_each = var.secrets_keys
+  for_each = var.secret_keys
   name        = "/${var.service_name}/${each.key}"
   description = "Secret for ${var.service_name}"
   type        = "SecureString"

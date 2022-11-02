@@ -153,7 +153,7 @@ variable "environment_variables" {
   }))
 }
 
-variable "secrets_keys" {
+variable "secret_keys" {
   default = []
   type = set(string)
 }
