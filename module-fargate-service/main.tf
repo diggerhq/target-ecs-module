@@ -54,7 +54,7 @@ resource "aws_ecs_task_definition" "app" {
     }
   ],
     [for variable in var.environment_variables : {
-      name  = variable.name
+      name  = variable.key
       value = tostring(variable.value)
     }])
   logConfiguration = {
