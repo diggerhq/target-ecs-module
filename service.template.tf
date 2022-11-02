@@ -30,6 +30,10 @@ module "monitoring" {
 EOT
     )
     {% endif %}
+    secrets = [for parameter in aws_ssm_parameter.*: {
+      name = parameter.name
+      valueFrom = parameter.arn
+    }]
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
@@ -75,6 +79,10 @@ EOT
     {{ environment_variables | tojson}}
 EOT
     )
+    secrets = [for parameter in aws_ssm_parameter.*: {
+      name = parameter.name
+      valueFrom = parameter.arn
+    }]
     {% endif %}
 
     alb_internal = false
@@ -199,6 +207,10 @@ EOT
 EOT
     )
     {% endif %}
+    secrets = [for parameter in aws_ssm_parameter.*: {
+      name = parameter.name
+      valueFrom = parameter.arn
+    }]
   }
 
   output "docker_registry_url" {
@@ -211,3 +223,15 @@ EOT
 
 {% endif %}
 
+
+
+{% for secret_key in secret_keys %}
+resource "aws_ssm_parameter" "{{secret_key}}" {
+  name  = "/secrets/${var.ecs_cluster_name}/{{secret_key}}"
+  type  = "SecureString"
+  value = "REPLACE_ME"
+  lifecycle {
+      ignore_changes = [value]
+    }
+  }
+{% endfor %}

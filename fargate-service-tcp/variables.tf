@@ -153,6 +153,15 @@ variable "environment_variables" {
   }))
 }
 
+variable "secrets" {
+  default = []
+  type = list(object({
+    name = string
+    valueFrom  = string
+  }))
+}
+
+
 # == Cloudwatch ==
 
 
