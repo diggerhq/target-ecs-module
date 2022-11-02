@@ -24,7 +24,9 @@ module "monitoring" {
     service_security_groups = [aws_security_group.ecs_service_sg.id]
     subnet_ids = var.public_subnets
     vpcCIDRblock = var.vpcCIDRblock
-
+    {% if environment_variables %}
+    environment_variables = jsondecode({{ environment_variables }})
+    {% endif %}
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}

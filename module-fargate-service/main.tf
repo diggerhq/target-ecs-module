@@ -34,49 +34,43 @@ resource "aws_ecs_task_definition" "app" {
 
   # defined in role.tf
   # task_role_arn = aws_iam_role.app_role.arn
-
-  container_definitions = <<EOT
-[
-  {
-    "name": "${var.container_name}",
-    "image": "${var.default_backend_image}",
-    "essential": true,
-    "portMappings": [
+  container_definitions = jsonencode([{
+    name      = var.container_name
+    image     = var.default_backend_image
+    essential = true
+    portMappings = [{
+      protocol      = "tcp"
+      containerPort = var.container_port
+      hostPort      = var.container_port
+    }]
+    environment = concat([
       {
-        "protocol": "tcp",
-        "containerPort": ${var.container_port},
-        "hostPort": ${var.container_port}
-      }
-    ],
-    "environment": [
-      {
-        "name": "PORT",
-        "value": "${var.container_port}"
+        name  = "PORT"
+        value = var.container_port
       },
       {
-        "name": "HEALTHCHECK",
-        "value": "${var.health_check}"
+        name  = "HEALTHCHECK"
+        value = var.health_check
       }
     ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${local.awsloggroup}",
-        "awslogs-region": "${var.region}",
-        "awslogs-stream-prefix": "ecs"
+      [for variable in var.environment_variables : {
+        name  = variable.name
+        value = variable.value
+      }])
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = local.awsloggroup
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "ecs"
       }
-    },
-    "mountPoints": [
-    %{for mountPoint in var.mountPoints}
-      {
-        "containerPath": "${mountPoint.path}",
-        "sourceVolume": "${mountPoint.volume}"
-      }
-    %{endfor}
-    ]
-  }
-]
-EOT
+    }
+    mountPoints = [for mountPoint in var.mountPoints: {
+      containerPath = mountPoint.path
+      sourceVolume  = mountPoint.volume
+    }]
+  }])
+
 
   dynamic "volume" {
     for_each = var.volumes
