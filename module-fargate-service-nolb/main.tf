@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "app" {
     environment =
       [for variable in var.environment_variables : {
         name  = variable.name
-        value = variable.value
+        value = tostring(variable.value)
       }]
     logConfiguration = {
       logDriver = "awslogs"

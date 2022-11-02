@@ -46,16 +46,16 @@ resource "aws_ecs_task_definition" "app" {
      environment = concat([
        {
          name  = "PORT"
-         value = var.container_port
+         value = tostring(var.container_port)
        },
        {
          name  = "HEALTHCHECK"
-         value = var.health_check
+         value = tostring(var.health_check)
        }
      ],
      [for variable in var.environment_variables : {
        name  = variable.name
-       value = variable.value
+       value = tostring(variable.value)
      }])
      logConfiguration = {
        logDriver = "awslogs"
