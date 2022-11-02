@@ -39,11 +39,3 @@ variable "public_subnets" {
 
 variable "container_port" {
 }
-
-variable "task_definition_environment" {
-  default = "[]"
-}
-
-variable "task_definition_secrets" {
-  default = "[]"
-}

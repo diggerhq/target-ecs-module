@@ -24,7 +24,12 @@ module "monitoring" {
     service_security_groups = []
     subnet_ids = var.public_subnets
     vpcCIDRblock = var.vpcCIDRblock
-
+    {% if environment_variables %}
+    environment_variables = jsondecode(<<EOT
+        {{ environment_variables | tojson}}
+EOT
+    )
+    {% endif %}
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
@@ -65,6 +70,12 @@ module "monitoring" {
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
+    {% if environment_variables %}
+    environment_variables = jsondecode(<<EOT
+    {{ environment_variables | tojson}}
+EOT
+    )
+    {% endif %}
 
     alb_internal = false
     alb_subnet_ids = var.public_subnets
@@ -97,8 +108,6 @@ module "monitoring" {
 
     container_port = var.container_port
     container_name = local.aws_app_identifier
-    task_definition_environment = var.task_definition_environment
-    task_definition_secrets = var.task_definition_secrets
     launch_type = "{{launch_type}}"
 
     default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
@@ -183,6 +192,12 @@ module "monitoring" {
 
     {% if ecs_autoscale_max_instances %}
       ecs_autoscale_max_instances = "{{ecs_autoscale_max_instances}}"
+    {% endif %}
+    {% if environment_variables %}
+    environment_variables = jsondecode(<<EOT
+            {{ environment_variables | tojson}}
+EOT
+    )
     {% endif %}
   }
 

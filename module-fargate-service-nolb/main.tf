@@ -35,29 +35,25 @@ resource "aws_ecs_task_definition" "app" {
   # defined in role.tf
   # task_role_arn = aws_iam_role.app_role.arn
 
-  container_definitions = <<DEFINITION
-[
-  {
-    "name": "${var.container_name}",
-    "image": "${var.default_backend_image}",
-    "essential": true,
-    "portMappings": [
-    ],
-    "environment": [
-    ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${local.awsloggroup}",
-        "awslogs-region": "${var.region}",
-        "awslogs-stream-prefix": "ecs"
+  container_definitions = jsonencode([{
+    name      = var.container_name
+    image     = var.default_backend_image
+    essential = true
+    portMappings = []
+    environment =
+      [for variable in var.environment_variables : {
+        name  = variable.key
+        value = tostring(variable.value)
+      }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = local.awsloggroup
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "ecs"
       }
     }
-  }
-]
-DEFINITION
-
-
+  }])
   tags = var.tags
 }
 

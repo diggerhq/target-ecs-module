@@ -34,33 +34,42 @@ resource "aws_ecs_task_definition" "app" {
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
 
   task_role_arn = aws_iam_role.ecs_task_role.arn
-
-  container_definitions = <<EOT
-[
-  {
-    "name": "${var.container_name}",
-    "image": "${local.container_image}",
-    "essential": true,
-    "portMappings": [
-      {
-        "protocol": "tcp",
-        "containerPort": ${var.container_port},
-        "hostPort": ${var.container_port}
-      }
-    ],
-    "environment": ${var.task_definition_environment},
-    "secrets" : ${var.task_definition_secrets},
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${local.awsloggroup}",
-        "awslogs-region": "${var.region}",
-        "awslogs-stream-prefix": "ecs"
-      }
+  container_definitions = jsonencode([{
+  name      = var.container_name
+  image     = var.default_backend_image
+  essential = true
+  portMappings = [{
+    protocol      = "tcp"
+    containerPort = var.container_port
+    hostPort      = var.container_port
+  }]
+  environment = concat([
+    {
+      name  = "PORT"
+      value = tostring(var.container_port)
+    },
+    {
+      name  = "HEALTHCHECK"
+      value = tostring(var.health_check)
+    }
+  ],
+    [for variable in var.environment_variables : {
+      name  = variable.key
+      value = tostring(variable.value)
+    }])
+  logConfiguration = {
+    logDriver = "awslogs"
+    options = {
+      "awslogs-group"         = local.awsloggroup
+      "awslogs-region"        = var.region
+      "awslogs-stream-prefix" = "ecs"
     }
   }
-]
-EOT
+  mountPoints = [for mountPoint in var.mountPoints: {
+    containerPath = mountPoint.path
+    sourceVolume  = mountPoint.volume
+  }]
+  }])
 
   dynamic "volume" {
     for_each = var.volumes

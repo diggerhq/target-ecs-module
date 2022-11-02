@@ -82,6 +82,14 @@ variable "task_memory" {
   default = "512"
 }
 
+variable "environment_variables" {
+  default = []
+  type = list(object({
+    key = string
+    value  = any
+  }))
+}
+
 # == Cloudwatch ==
 
 

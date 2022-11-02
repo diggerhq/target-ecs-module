@@ -156,8 +156,19 @@ variable "volumes" {
 
 variable "mountPoints" {
   default = []
+  type = list(object({
+    path = string
+    volume  = string
+  }))
 }
 
+variable "environment_variables" {
+  default = []
+  type = list(object({
+    key = string
+    value  = any
+  }))
+}
 # == Cloudwatch ==
 
 
@@ -165,10 +176,4 @@ variable "logs_retention_in_days" {
   type        = number
   default     = 90
   description = "Specifies the number of days you want to retain log events"
-}
-
-variable "task_definition_environment" {
-}
-
-variable "task_definition_secrets" {
 }
