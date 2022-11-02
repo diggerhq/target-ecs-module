@@ -33,43 +33,41 @@ resource "aws_ecs_task_definition" "app" {
   memory                   = var.task_memory
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
 
-  # defined in role.tf
-  # task_role_arn = aws_iam_role.app_role.arn
-  container_definitions = jsonencode([{
-    name      = var.container_name
-    image     = var.default_backend_image
-    essential = true
-    portMappings = [{
-      protocol      = "tcp"
-      containerPort = var.container_port
-      hostPort      = var.container_port
-    }]
-    environment = concat([
-      {
-        name  = "PORT"
-        value = tostring(var.container_port)
-      },
-      {
-        name  = "HEALTHCHECK"
-        value = tostring(var.health_check)
-      }
-    ],
-      [for variable in var.environment_variables : {
-        name  = variable.name
-        value = tostring(variable.value)
-      }])
-    logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        "awslogs-group"         = local.awsloggroup
-        "awslogs-region"        = var.region
-        "awslogs-stream-prefix" = "ecs"
-      }
+  task_role_arn = aws_iam_role.ecs_task_role.arn  container_definitions = jsonencode([{
+  name      = var.container_name
+  image     = var.default_backend_image
+  essential = true
+  portMappings = [{
+    protocol      = "tcp"
+    containerPort = var.container_port
+    hostPort      = var.container_port
+  }]
+  environment = concat([
+    {
+      name  = "PORT"
+      value = tostring(var.container_port)
+    },
+    {
+      name  = "HEALTHCHECK"
+      value = tostring(var.health_check)
     }
-    mountPoints = [for mountPoint in var.mountPoints: {
-      containerPath = mountPoint.path
-      sourceVolume  = mountPoint.volume
-    }]
+  ],
+    [for variable in var.environment_variables : {
+      name  = variable.name
+      value = tostring(variable.value)
+    }])
+  logConfiguration = {
+    logDriver = "awslogs"
+    options = {
+      "awslogs-group"         = local.awsloggroup
+      "awslogs-region"        = var.region
+      "awslogs-stream-prefix" = "ecs"
+    }
+  }
+  mountPoints = [for mountPoint in var.mountPoints: {
+    containerPath = mountPoint.path
+    sourceVolume  = mountPoint.volume
+  }]
   }])
 
   dynamic "volume" {

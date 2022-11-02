@@ -108,8 +108,6 @@ EOT
 
     container_port = var.container_port
     container_name = local.aws_app_identifier
-    task_definition_environment = var.task_definition_environment
-    task_definition_secrets = var.task_definition_secrets
     launch_type = "{{launch_type}}"
 
     default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
