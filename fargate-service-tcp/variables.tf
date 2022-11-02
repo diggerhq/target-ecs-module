@@ -153,12 +153,9 @@ variable "environment_variables" {
   }))
 }
 
-variable "secrets" {
+variable "secrets_keys" {
   default = []
-  type = list(object({
-    name = string
-    valueFrom  = string
-  }))
+  type = list(string)
 }
 
 

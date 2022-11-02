@@ -90,13 +90,7 @@ EOT
     {% endif %}
 
     {% if secret_keys %}
-    secrets = [for secret_key in jsonencode(<<EOT
-    {{ secret_keys | tojson }}
-EOT
-): {
-      name = aws_ssm_parameter."${secret_key}".name
-      valueFrom = aws_ssm_parameter."${secret_key}".arn
-    }]
+    secrets = toset({{secret_keys | tojson}})
     {% endif %}
 
     alb_internal = false
@@ -246,13 +240,4 @@ EOT
 
 
 
-{% for secret_key in secret_keys %}
-resource "aws_ssm_parameter" "{{secret_key}}" {
-  name  = "/secrets/${var.ecs_cluster_name}/{{secret_key}}"
-  type  = "SecureString"
-  value = "REPLACE_ME"
-  lifecycle {
-      ignore_changes = [value]
-    }
-  }
-{% endfor %}
+
