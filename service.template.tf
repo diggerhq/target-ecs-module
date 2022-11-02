@@ -38,6 +38,7 @@ EOT
     name = aws_ssm_parameter.secret_key.name
     valueFrom = aws_ssm_parameter.secret_key.arn
     }]
+    {% endif %}
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
@@ -223,6 +224,7 @@ EOT
     name = aws_ssm_parameter.secret_key.name
     valueFrom = aws_ssm_parameter.secret_key.arn
     }]
+    {% endif %}
   }
 
   output "docker_registry_url" {
