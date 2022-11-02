@@ -30,9 +30,13 @@ module "monitoring" {
 EOT
     )
     {% endif %}
-    secrets = [for parameter in aws_ssm_parameter.*: {
-      name = parameter.name
-      valueFrom = parameter.arn
+    {% if secret_keys %}
+    secrets = [for secret_key in jsonencode(<<EOT
+        {{ secret_keys | tojson }}
+    EOT
+    ): {
+    name = aws_ssm_parameter.secret_key.name
+    valueFrom = aws_ssm_parameter.secret_key.arn
     }]
     {%- if internal is defined %}
     internal={{ internal }}
@@ -79,9 +83,13 @@ EOT
     {{ environment_variables | tojson}}
 EOT
     )
-    secrets = [for parameter in aws_ssm_parameter.*: {
-      name = parameter.name
-      valueFrom = parameter.arn
+    {% if secret_keys %}
+    secrets = [for secret_key in jsonencode(<<EOT
+    {{ secret_keys | tojson }}
+EOT
+): {
+      name = aws_ssm_parameter.secret_key.name
+      valueFrom = aws_ssm_parameter.secret_key.arn
     }]
     {% endif %}
 
@@ -207,9 +215,13 @@ EOT
 EOT
     )
     {% endif %}
-    secrets = [for parameter in aws_ssm_parameter.*: {
-      name = parameter.name
-      valueFrom = parameter.arn
+    {% if secret_keys %}
+    secrets = [for secret_key in jsonencode(<<EOT
+        {{ secret_keys | tojson }}
+    EOT
+    ): {
+    name = aws_ssm_parameter.secret_key.name
+    valueFrom = aws_ssm_parameter.secret_key.arn
     }]
   }
 
