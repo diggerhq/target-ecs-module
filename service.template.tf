@@ -25,7 +25,7 @@ module "monitoring" {
     subnet_ids = var.public_subnets
     vpcCIDRblock = var.vpcCIDRblock
     {% if environment_variables %}
-    environment_variables = jsondecode({{ environment_variables }})
+    environment_variables = jsondecode({{ environment_variables | tojson }})
     {% endif %}
     {%- if internal is defined %}
     internal={{ internal }}
@@ -68,7 +68,7 @@ module "monitoring" {
     internal={{ internal }}
     {%- endif %}
     {% if environment_variables %}
-    environment_variables = jsondecode({{ environment_variables }})
+    environment_variables = jsondecode({{ environment_variables | tojson }})
     {% endif %}
 
     alb_internal = false
@@ -190,7 +190,7 @@ module "monitoring" {
       ecs_autoscale_max_instances = "{{ecs_autoscale_max_instances}}"
     {% endif %}
     {% if environment_variables %}
-    environment_variables = jsondecode({{ environment_variables }})
+    environment_variables = jsondecode({{ environment_variables | tojson }})
     {% endif %}
   }
 
