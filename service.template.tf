@@ -67,6 +67,9 @@ module "monitoring" {
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
+    {% if environment_variables %}
+    environment_variables = jsondecode({{ environment_variables }})
+    {% endif %}
 
     alb_internal = false
     alb_subnet_ids = var.public_subnets
@@ -185,6 +188,9 @@ module "monitoring" {
 
     {% if ecs_autoscale_max_instances %}
       ecs_autoscale_max_instances = "{{ecs_autoscale_max_instances}}"
+    {% endif %}
+    {% if environment_variables %}
+    environment_variables = jsondecode({{ environment_variables }})
     {% endif %}
   }
 
