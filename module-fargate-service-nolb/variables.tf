@@ -85,7 +85,7 @@ variable "task_memory" {
 variable "environment_variables" {
   default = []
   type = list(object({
-    name = string
+    key = string
     value  = any
   }))
 }
