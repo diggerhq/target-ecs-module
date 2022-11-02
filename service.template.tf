@@ -32,13 +32,7 @@ EOT
     {% endif %}
 
     {% if secret_keys %}
-    secrets = [for secret_key in jsonencode(<<EOT
-        {{ secret_keys | tojson }}
-    EOT
-    ): {
-      name = aws_ssm_parameter."${secret_key}".name
-      valueFrom = aws_ssm_parameter."${secret_key}".arn
-    }]
+    secret_keys = toset({{secret_keys | tojson}})
     {% endif %}
 
     {%- if internal is defined %}
@@ -90,7 +84,7 @@ EOT
     {% endif %}
 
     {% if secret_keys %}
-    secrets = toset({{secret_keys | tojson}})
+    secret_keys = toset({{secret_keys | tojson}})
     {% endif %}
 
     alb_internal = false
@@ -218,13 +212,7 @@ EOT
     {% endif %}
 
     {% if secret_keys %}
-    secrets = [for secret_key in jsonencode(<<EOT
-        {{ secret_keys | tojson }}
-    EOT
-    ): {
-      name = aws_ssm_parameter."${secret_key}".name
-      valueFrom = aws_ssm_parameter."${secret_key}".arn
-    }]
+    secret_keys = toset({{secret_keys | tojson}})
     {% endif %}
   }
 

@@ -155,7 +155,7 @@ variable "environment_variables" {
 
 variable "secrets_keys" {
   default = []
-  type = list(string)
+  type = set(string)
 }
 
 
