@@ -33,7 +33,8 @@ resource "aws_ecs_task_definition" "app" {
   memory                   = var.task_memory
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
 
-  task_role_arn = aws_iam_role.ecs_task_role.arn  container_definitions = jsonencode([{
+  task_role_arn = aws_iam_role.ecs_task_role.arn
+  container_definitions = jsonencode([{
   name      = var.container_name
   image     = var.default_backend_image
   essential = true
