@@ -104,7 +104,7 @@ resource "aws_ecs_service" "app" {
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${var.ecs_cluster.name}-${var.service_name}-ecs"
+  name               = "${var.ecs_cluster.name}-task-exec-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -120,7 +120,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name               = "${var.service_name}_task_role"
+  name               = "${var.service_name}-task-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
