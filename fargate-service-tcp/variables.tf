@@ -153,6 +153,12 @@ variable "environment_variables" {
   }))
 }
 
+variable "secret_keys" {
+  default = []
+  type = set(string)
+}
+
+
 # == Cloudwatch ==
 
 

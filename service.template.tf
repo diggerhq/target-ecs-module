@@ -30,6 +30,11 @@ module "monitoring" {
 EOT
     )
     {% endif %}
+
+    {% if secret_keys %}
+    secret_keys = toset({{secret_keys | tojson}})
+    {% endif %}
+
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
@@ -70,11 +75,16 @@ EOT
     {%- if internal is defined %}
     internal={{ internal }}
     {%- endif %}
+
     {% if environment_variables %}
     environment_variables = jsondecode(<<EOT
     {{ environment_variables | tojson}}
 EOT
     )
+    {% endif %}
+
+    {% if secret_keys %}
+    secret_keys = toset({{secret_keys | tojson}})
     {% endif %}
 
     alb_internal = false
@@ -193,11 +203,16 @@ EOT
     {% if ecs_autoscale_max_instances %}
       ecs_autoscale_max_instances = "{{ecs_autoscale_max_instances}}"
     {% endif %}
+
     {% if environment_variables %}
     environment_variables = jsondecode(<<EOT
             {{ environment_variables | tojson}}
 EOT
     )
+    {% endif %}
+
+    {% if secret_keys %}
+    secret_keys = toset({{secret_keys | tojson}})
     {% endif %}
   }
 
@@ -210,4 +225,7 @@ EOT
   }
 
 {% endif %}
+
+
+
 

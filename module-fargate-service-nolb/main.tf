@@ -45,6 +45,10 @@ resource "aws_ecs_task_definition" "app" {
         name  = variable.key
         value = tostring(variable.value)
       }]
+    secrets = [for secret in aws_ssm_parameter.secrets : {
+      name      = secret.name
+      valueFrom = secret.arn
+    }]
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -112,4 +116,15 @@ resource "aws_cloudwatch_log_group" "logs" {
   name              = local.awsloggroup
   retention_in_days = var.logs_retention_in_days
   tags              = var.tags
+}
+
+resource "aws_ssm_parameter" "secrets" {
+  for_each = var.secret_keys
+  name        = "/${var.service_name}/${each.key}"
+  description = "Secret for ${var.service_name}"
+  type        = "SecureString"
+  value       = "REPLACE_ME"
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
