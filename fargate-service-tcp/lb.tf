@@ -6,7 +6,7 @@
 
 
 resource "aws_lb" "main" {
-  name               = "${var.service_name}"
+  name               = var.service_name
   load_balancer_type = "network"
   # launch lbs in public or private subnets based on "internal" variable
   internal                         = var.internal
@@ -35,7 +35,7 @@ resource "aws_lb_listener" "tcp" {
 }
 
 resource "aws_lb_target_group" "main" {
-  name                 = "${var.service_name}"
+  name                 = var.service_name
   port                 = var.lb_port
   protocol             = var.health_check_protocol
   vpc_id               = var.service_vpc.id
@@ -45,6 +45,7 @@ resource "aws_lb_target_group" "main" {
   health_check {
     path                = var.health_check
     interval            = var.health_check_interval
+    matcher             = var.health_check_matcher
     healthy_threshold   = 5
     unhealthy_threshold = 5
   }
@@ -66,7 +67,7 @@ data "aws_elb_service_account" "main" {
 
 # bucket for storing NLB access logs
 resource "aws_s3_bucket" "lb_access_logs" {
-  bucket_prefix = "${var.service_name}"
+  bucket_prefix = var.service_name
   tags          = var.tags
   force_destroy = true
 }

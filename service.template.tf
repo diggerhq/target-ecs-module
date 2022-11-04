@@ -44,6 +44,10 @@ EOT
     health_check_interval = "{{health_check_interval}}"
     {% endif %}
 
+    {% if health_check_matcher %}
+    health_check_matcher = "{{health_check_matcher}}"
+    {% endif %}
+
     container_port = var.container_port
     container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
@@ -76,6 +80,10 @@ EOT
     internal={{ internal }}
     {%- endif %}
 
+    {%- if alb_internal is defined %}
+    alb_internal={{ alb_internal }}
+    {%- endif %}
+
     {% if environment_variables %}
     environment_variables = jsondecode(<<EOT
     {{ environment_variables | tojson}}
@@ -87,7 +95,6 @@ EOT
     secret_keys = toset({{secret_keys | tojson}})
     {% endif %}
 
-    alb_internal = false
     alb_subnet_ids = var.public_subnets
 
     health_check = "{{health_check}}"
@@ -225,7 +232,4 @@ EOT
   }
 
 {% endif %}
-
-
-
 
