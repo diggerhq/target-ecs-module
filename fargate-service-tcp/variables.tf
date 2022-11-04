@@ -143,7 +143,25 @@ variable "volumes" {
 
 variable "mountPoints" {
   default = []
+  type = list(object({
+    path = string
+    volume  = string
+  }))
 }
+
+variable "environment_variables" {
+  default = []
+  type = list(object({
+    key = string
+    value  = any
+  }))
+}
+
+variable "secret_keys" {
+  default = []
+  type = set(string)
+}
+
 
 # == Cloudwatch ==
 

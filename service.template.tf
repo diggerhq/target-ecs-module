@@ -1,6 +1,6 @@
 
 locals {
-  aws_app_identifier = var.aws_app_identifier
+  aws_app_identifier = "{{aws_app_identifier}}"
 }
 
 module "monitoring" {
@@ -24,6 +24,16 @@ module "monitoring" {
     service_security_groups = []
     subnet_ids = var.public_subnets
     vpcCIDRblock = var.vpcCIDRblock
+    {% if environment_variables %}
+    environment_variables = jsondecode(<<EOT
+        {{ environment_variables | tojson}}
+EOT
+    )
+    {% endif %}
+
+    {% if secret_keys %}
+    secret_keys = toset({{secret_keys | tojson}})
+    {% endif %}
 
     {%- if internal is defined %}
     internal={{ internal }}
@@ -65,8 +75,6 @@ module "monitoring" {
     service_vpc = local.vpc
     service_security_groups = []
     subnet_ids = var.private_subnets
-    ecs_task_policy_json = var.ecs_task_policy_json
-    ecs_task_execution_policy_json = var.ecs_task_execution_policy_json
 
     {%- if internal is defined %}
     internal={{ internal }}
@@ -75,6 +83,18 @@ module "monitoring" {
     {%- if alb_internal is defined %}
     alb_internal={{ alb_internal }}
     {%- endif %}
+
+    {% if environment_variables %}
+    environment_variables = jsondecode(<<EOT
+    {{ environment_variables | tojson}}
+EOT
+    )
+    {% endif %}
+
+    {% if secret_keys %}
+    secret_keys = toset({{secret_keys | tojson}})
+    {% endif %}
+
     alb_subnet_ids = var.public_subnets
 
     health_check = "{{health_check}}"
@@ -105,8 +125,6 @@ module "monitoring" {
 
     container_port = var.container_port
     container_name = local.aws_app_identifier
-    task_definition_environment = var.task_definition_environment
-    task_definition_secrets = var.task_definition_secrets
     launch_type = "{{launch_type}}"
 
     default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
@@ -191,6 +209,17 @@ module "monitoring" {
 
     {% if ecs_autoscale_max_instances %}
       ecs_autoscale_max_instances = "{{ecs_autoscale_max_instances}}"
+    {% endif %}
+
+    {% if environment_variables %}
+    environment_variables = jsondecode(<<EOT
+            {{ environment_variables | tojson}}
+EOT
+    )
+    {% endif %}
+
+    {% if secret_keys %}
+    secret_keys = toset({{secret_keys | tojson}})
     {% endif %}
   }
 
