@@ -2,17 +2,17 @@
 
 
 resource "aws_security_group" "lb_sg" {
-  name        = "${var.ecs_cluster.name}-${var.service_name}-lb"
-  description = "Allow connections from external resources while limiting connections from ${var.ecs_cluster.name}-lb to internal resources"
-  vpc_id      = var.service_vpc.id
+  name        = "${var.ecs_cluster_name}-${var.ecs_service_name}-lb"
+  description = "Allow connections from external resources while limiting connections from ${var.ecs_cluster_name}-lb to internal resources"
+  vpc_id      = var.vpc_id
 
   tags = var.tags
 }
 
 resource "aws_security_group" "ecs_task_sg" {
-  name        = "${var.ecs_cluster.name}-${var.service_name}-task"
-  description = "Limit connections from internal resources while allowing ${var.ecs_cluster.name}-task to connect to all external resources"
-  vpc_id      = var.service_vpc.id
+  name        = "${var.ecs_cluster_name}-${var.ecs_service_name}-task"
+  description = "Limit connections from internal resources while allowing ${var.ecs_cluster_name}-task to connect to all external resources"
+  vpc_id      = var.vpc_id
 
   tags = var.tags
 }
@@ -21,7 +21,7 @@ resource "aws_security_group" "ecs_task_sg" {
 
 
 resource "aws_security_group_rule" "lb_egress_rule" {
-  description              = "Only allow SG ${var.ecs_cluster.name}-lb to connect to ${var.ecs_cluster.name}-task on port ${var.container_port}"
+  description              = "Only allow SG ${var.ecs_cluster_name}-lb to connect to ${var.ecs_cluster_name}-task on port ${var.container_port}"
   type                     = "egress"
   from_port                = var.container_port
   to_port                  = var.container_port
@@ -32,7 +32,7 @@ resource "aws_security_group_rule" "lb_egress_rule" {
 
 # Rules for the TASK (Targets the LB SG)
 resource "aws_security_group_rule" "ecs_task_ingress_rule" {
-  description              = "Only allow connections from SG ${var.ecs_cluster.name}-lb on port ${var.container_port}"
+  description              = "Only allow connections from SG ${var.ecs_cluster_name}-lb on port ${var.container_port}"
   type                     = "ingress"
   from_port                = var.container_port
   to_port                  = var.container_port
