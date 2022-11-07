@@ -150,6 +150,7 @@ variable "container_name" {
 }
 
 variable "launch_type" {
+  default = "FARGATE"
 }
 
 # The minimum number of containers that should be running.
