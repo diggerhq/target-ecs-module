@@ -19,7 +19,7 @@ locals {
 
 resource "aws_appautoscaling_target" "app_scale_target" {
   service_namespace  = "ecs"
-  resource_id        = "service/${var.ecs_cluster.name}/${aws_ecs_service.app.name}"
+  resource_id        = "service/${var.ecs_cluster_name}/${aws_ecs_service.app.name}"
   scalable_dimension = "ecs:service:DesiredCount"
   max_capacity       = var.ecs_autoscale_max_instances
   min_capacity       = var.ecs_autoscale_min_instances
@@ -94,7 +94,7 @@ resource "aws_ecs_task_definition" "app" {
 
 resource "aws_ecs_service" "app" {
   name                              = var.ecs_service_name
-  cluster                           = var.ecs_cluster.id
+  cluster                           = aws_ecs_cluster.app.id
   launch_type                       = var.launch_type
   task_definition                   = aws_ecs_task_definition.app.arn
   desired_count                     = var.ecs_autoscale_min_instances
@@ -118,7 +118,7 @@ resource "aws_ecs_service" "app" {
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${var.ecs_cluster.name}-task-exec-role"
+  name               = "${var.ecs_cluster_name}-task-exec-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 

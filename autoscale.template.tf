@@ -48,7 +48,7 @@ variable "ecs_as_cpu_high_threshold_per" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
-  alarm_name          = "${var.ecs_cluster.name}-${var.service_name}-CPU-Utilization-High-${var.ecs_as_cpu_high_threshold_per}"
+  alarm_name          = "${var.ecs_cluster_name}-${var.ecs_service_name}-CPU-Utilization-High-${var.ecs_as_cpu_high_threshold_per}"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "1"
   metric_name         = "CPUUtilization"
@@ -58,7 +58,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
   threshold           = var.ecs_as_cpu_high_threshold_per
 
   dimensions = {
-    ClusterName = var.ecs_cluster.name
+    ClusterName = var.ecs_cluster_name
     ServiceName = var.service_name
   }
 
@@ -66,7 +66,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_utilization_low" {
-  alarm_name          = "${var.ecs_cluster.name}-${var.service_name}-CPU-Utilization-Low-${var.ecs_as_cpu_low_threshold_per}"
+  alarm_name          = "${var.ecs_cluster_name}-${var.ecs_service_name}-CPU-Utilization-Low-${var.ecs_as_cpu_low_threshold_per}"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "CPUUtilization"
@@ -76,8 +76,8 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_low" {
   threshold           = var.ecs_as_cpu_low_threshold_per
 
   dimensions = {
-    ClusterName = var.ecs_cluster.name
-    ServiceName = var.service_name
+    ClusterName = var.ecs_cluster_name
+    ServiceName = var.ecs_service_name
   }
 
   alarm_actions = [aws_appautoscaling_policy.app_down.arn]
