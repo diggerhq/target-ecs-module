@@ -4,11 +4,14 @@ This template is a fork of https://github.com/turnerlabs/terraform-ecs-fargate a
 Jinja parameters:
 
 
-controlling behaviour:
+parameters controlling behaviour (Booleans):
 is_monitoring_enabled
 is_lb_monitoring_enabled
 tcp_service
 load_balancer
+auto_scaling_enabled
+
+Parameters to be injected into files (Strings):
 
 aws_app_identifier
 internal
