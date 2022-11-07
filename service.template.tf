@@ -3,14 +3,15 @@ locals {
   aws_app_identifier = "{{aws_app_identifier}}"
 }
 
+{% if is_monitoring_enabled %}
 module "monitoring" {
-  count = var.monitoring_enabled ? 1 : 0
   source = "./monitoring"
   ecs_cluster_name = aws_ecs_cluster.app.name
   ecs_service_name = local.aws_app_identifier
   alarms_sns_topic_arn = var.alarms_sns_topic_arn
   tags = var.tags
 }
+{% endif %}
 
 {% if tcp_service %}
   
