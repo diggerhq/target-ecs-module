@@ -127,7 +127,6 @@ EOT
     container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
 
-    default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
     tags = var.tags
 
     {% if lb_ssl_certificate_arn %}
@@ -194,7 +193,6 @@ EOT
 
     container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
-    default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
     tags = var.tags
     {% if task_cpu %}
     task_cpu = "{{task_cpu}}"
