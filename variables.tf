@@ -48,9 +48,6 @@ variable "ecs_task_policy_json" {
 variable "ecs_task_execution_policy_json" {
 }
 
-variable "ecs_cluster" {}
-
-
 # The tag mutability setting for the repository (defaults to IMMUTABLE)
 variable "image_tag_mutability" {
   type        = string
