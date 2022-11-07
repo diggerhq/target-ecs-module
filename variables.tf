@@ -62,7 +62,6 @@ variable "service_security_groups" {
 # === Load Balancer ===
 
 # The loadbalancer subnets
-variable "subnet_ids" {}
 
 variable "alb_subnet_ids" {}
 
@@ -105,6 +104,7 @@ variable "deregistration_delay" {
 
 # The path to the health check for the load balancer to know if the container(s) are ready
 variable "health_check" {
+  default = "/"
 }
 
 variable "health_check_enabled" {
