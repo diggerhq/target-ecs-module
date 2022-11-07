@@ -171,19 +171,6 @@ resource "aws_iam_role_policy_attachment" "ecs_task_policy_attachment" {
   policy_arn = aws_iam_policy.ecs_task_policy.arn
 }
 
-/*
-resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
-
-# provide access to read SSM secrets
-resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_ssm_policy" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
-}
-*/
-
 resource "aws_cloudwatch_log_group" "logs" {
   name              = local.awsloggroup
   retention_in_days = var.logs_retention_in_days
