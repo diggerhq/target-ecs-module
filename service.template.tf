@@ -53,7 +53,6 @@ EOT
     container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
 
-    default_backend_image = "quay.io/turner/turner-defaultbackend:0.2.0"
     {% if task_cpu %}task_cpu = "{{task_cpu}}" {% endif %}
     {% if task_memory %}task_memory = "{{task_memory}}" {% endif %}
   }
