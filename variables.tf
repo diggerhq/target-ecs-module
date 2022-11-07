@@ -16,18 +16,12 @@ variable "tags" {
   type = map(string)
 }
 
-# The application's name
-variable "app" {
-}
-
 # ecs derived variable names
 variable "ecs_cluster_name" {}
 
 variable "ecs_service_name" {}
 
 variable "alarms_sns_topic_arn" {}
-
-variable "monitoring_enabled" {}
 
 # Network configuration
 
@@ -64,6 +58,8 @@ variable "service_security_groups" {
 # The loadbalancer subnets
 
 variable "alb_subnet_ids" {}
+
+variable "ecs_subnet_ids" {}
 
 # The port the load balancer will listen on
 variable "lb_port" {
@@ -135,11 +131,6 @@ variable "lb_access_logs_expiration_days" {
 }
 
 
-
-# === Container ===
-
-
-
 # The port the container will listen on, used for load balancer health check
 # Best practice is that this value is higher than 1024 so the container processes
 # isn't running at root.
@@ -160,17 +151,6 @@ variable "ecs_autoscale_min_instances" {
 # used by both autoscale-perf.tf and autoscale.time.tf
 variable "ecs_autoscale_max_instances" {
   default = "8"
-}
-
-# The default docker image to deploy with the infrastructure.
-# Note that you can use the fargate CLI for application concerns
-# like deploying actual application images and environment variables
-# on top of the infrastructure provisioned by this template
-# https://github.com/turnerlabs/fargate
-# note that the source for the turner default backend image is here:
-# https://github.com/turnerlabs/turner-defaultbackend
-variable "default_backend_image" {
-  default = "quay.io/turner/turner-defaultbackend:0.2.0"
 }
 
 variable "task_cpu" {
@@ -201,7 +181,6 @@ variable "environment_variables" {
     value  = any
   }))
 }
-
 
 variable "secret_keys" {
   default = []

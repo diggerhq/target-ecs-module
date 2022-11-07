@@ -26,7 +26,7 @@ resource "aws_appautoscaling_target" "app_scale_target" {
 }
 
 resource "aws_ecs_task_definition" "app" {
-  family                   = var.container_name
+  family                   = var.ecs_service_name
   requires_compatibilities = [var.launch_type]
   network_mode             = "awsvpc"
   cpu                      = var.task_cpu
@@ -35,8 +35,8 @@ resource "aws_ecs_task_definition" "app" {
 
   task_role_arn = aws_iam_role.ecs_task_role.arn
   container_definitions = jsonencode([{
-  name      = var.container_name
-  image     = var.default_backend_image
+  name      = var.ecs_service_name
+  image     = aws_ecr_repository.app.repository_url
   essential = true
   portMappings = [{
     protocol      = "tcp"
@@ -102,18 +102,18 @@ resource "aws_ecs_service" "app" {
 
   network_configuration {
     security_groups  = concat([aws_security_group.ecs_task_sg.id], var.service_security_groups)
-    subnets          = var.subnet_ids
+    subnets          = var.ecs_subnet_ids
     assign_public_ip = !var.internal
   }
 
   load_balancer {
     target_group_arn = aws_alb_target_group.main.id
-    container_name   = var.container_name
+    container_name   = var.ecs_service_name
     container_port   = var.container_port
   }
 
   # workaround for https://github.com/hashicorp/terraform/issues/12634
-  depends_on = [aws_alb_listener.http]
+  depends_on = [aws_alb_listener.]
 }
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
