@@ -48,13 +48,8 @@ variable "ecs_task_policy_json" {
 variable "ecs_task_execution_policy_json" {
 }
 
-variable "aws_app_identifier" {}
-
-
-
 variable "ecs_cluster" {}
 
-variable "service_name" {}
 
 # The tag mutability setting for the repository (defaults to IMMUTABLE)
 variable "image_tag_mutability" {
