@@ -6,6 +6,7 @@ Jinja parameters:
 
 controlling behaviour:
 is_monitoring_enabled
+is_lb_monitoring_enabled
 tcp_service
 load_balancer
 
