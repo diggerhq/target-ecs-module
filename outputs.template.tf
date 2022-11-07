@@ -22,3 +22,7 @@ output "lb_zone_id" {
 }
 
 {% endif %}
+
+output "docker_registry_url" {
+  value = aws_ecr_repository.app.repository_url
+}
