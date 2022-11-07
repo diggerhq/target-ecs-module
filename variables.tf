@@ -144,11 +144,6 @@ variable "lb_access_logs_expiration_days" {
 # Best practice is that this value is higher than 1024 so the container processes
 # isn't running at root.
 
-
-# The name of the container to run
-variable "container_name" {
-}
-
 variable "launch_type" {
   default = "FARGATE"
 }
