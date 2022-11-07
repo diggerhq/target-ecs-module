@@ -1,1 +1,1 @@
-{{ 'internal=' + internal if intenal else '' }}
+{{ 'internal=' + internal if internal is defined else '' }}
