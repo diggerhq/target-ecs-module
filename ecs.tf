@@ -113,7 +113,7 @@ resource "aws_ecs_service" "app" {
   }
 
   # workaround for https://github.com/hashicorp/terraform/issues/12634
-  depends_on = [aws_alb_listener.]
+  #depends_on = [aws_alb_listener.]
 }
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
