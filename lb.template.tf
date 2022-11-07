@@ -1,7 +1,7 @@
 {% if load_balancer %}
 
 resource "aws_alb" "main" {
-  name = var.service_name
+  name = var.ecs_service_name
 
   # launch lbs in public or private subnets based on "internal" variable
   internal        = var.alb_internal
@@ -17,10 +17,10 @@ resource "aws_alb" "main" {
 }
 
 resource "aws_alb_target_group" "main" {
-  name                 = var.service_name
+  name                 = var.ecs_service_name
   port                 = var.lb_port
   protocol             = var.lb_protocol
-  vpc_id               = var.service_vpc.id
+  vpc_id               = var.vpc_id
   target_type          = "ip"
   deregistration_delay = var.deregistration_delay
 
@@ -47,7 +47,7 @@ data "aws_elb_service_account" "main" {
 
 # bucket for storing ALB access logs
 resource "aws_s3_bucket" "lb_access_logs" {
-  bucket_prefix = var.service_name
+  bucket_prefix = var.ecs_service_name
   tags          = var.tags
   force_destroy = true
 }
@@ -128,7 +128,7 @@ resource "aws_alb_listener" "http" {
   }
 }
 
-resource "aws_lb_listener" "https" {
+resource "aws_alb_listener" "https" {
   count = var.lb_ssl_certificate_arn==null ? 0 : 1
   load_balancer_arn = aws_alb.main.arn
   port              = "443"
@@ -141,9 +141,9 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-resource "aws_lb_listener_certificate" "lb_listener_cert" {
+resource "aws_alb_listener_certificate" "lb_listener_cert" {
    count = var.lb_ssl_certificate_arn==null ? 0 : 1
-   listener_arn = aws_lb_listener.https[0].arn
+   listener_arn = aws_alb_listener.https[0].arn
    certificate_arn   = var.lb_ssl_certificate_arn
 }
 
