@@ -1,4 +1,5 @@
 
+/*
 locals {
   aws_app_identifier = "{{aws_app_identifier}}"
 }
@@ -231,3 +232,4 @@ EOT
 
 {% endif %}
 
+*/
