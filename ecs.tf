@@ -13,7 +13,7 @@
  */
 
 locals {
-  awsloggroup     = "/ecs/service/${var.service_name}"
+  awsloggroup     = "/ecs/service/${var.ecs_service_name}"
   container_image = aws_ecr_repository.app.repository_url
 }
 
@@ -93,7 +93,7 @@ resource "aws_ecs_task_definition" "app" {
 }
 
 resource "aws_ecs_service" "app" {
-  name                              = var.service_name
+  name                              = var.ecs_service_name
   cluster                           = var.ecs_cluster.id
   launch_type                       = var.launch_type
   task_definition                   = aws_ecs_task_definition.app.arn
@@ -134,7 +134,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name               = "${var.service_name}-task-role"
+  name               = "${var.ecs_service_name}-task-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -192,8 +192,8 @@ resource "aws_cloudwatch_log_group" "logs" {
 
 resource "aws_ssm_parameter" "secrets" {
   for_each = var.secret_keys
-  name        = "/${var.service_name}/${each.key}"
-  description = "Secret for ${var.service_name}"
+  name        = "/${var.ecs_service_name}/${each.key}"
+  description = "Secret for ${var.ecs_service_name}"
   type        = "SecureString"
   value       = "REPLACE_ME"
   lifecycle {
