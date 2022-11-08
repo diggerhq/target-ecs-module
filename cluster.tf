@@ -1,6 +1,6 @@
 
 
-resource "aws_ecs_cluster" "app" {
+resource "aws_ecs_cluster" "ecs_cluster" {
   name = var.ecs_cluster_name
   setting {
     name  = "containerInsights"
@@ -10,5 +10,5 @@ resource "aws_ecs_cluster" "app" {
 }
 
 output "ecs_cluster_name" {
-  value = aws_ecs_cluster.app.name
+  value = aws_ecs_cluster.ecs_cluster.name
 }

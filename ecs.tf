@@ -94,7 +94,7 @@ resource "aws_ecs_task_definition" "app" {
 
 resource "aws_ecs_service" "app" {
   name                              = var.ecs_service_name
-  cluster                           = aws_ecs_cluster.app.id
+  cluster                           = aws_ecs_cluster.ecs_cluster.id
   launch_type                       = var.launch_type
   task_definition                   = aws_ecs_task_definition.app.arn
   desired_count                     = var.ecs_autoscale_min_instances
