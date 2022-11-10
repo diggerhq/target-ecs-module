@@ -69,7 +69,7 @@ EOT
     region = var.region
     service_vpc = local.vpc
     service_security_groups = []
-    subnet_ids = var.private_subnets
+    subnet_ids = var.public_subnets
 
     {%- if internal is defined %}
     internal={{ internal }}
