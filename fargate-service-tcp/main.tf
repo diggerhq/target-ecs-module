@@ -36,7 +36,7 @@ resource "aws_ecs_task_definition" "app" {
   # task_role_arn = aws_iam_role.app_role.arn
    container_definitions = jsonencode([{
      name      = var.container_name
-     image     = var.default_backend_image
+     image     = aws_ecr_repository.app.repository_url
      essential = true
      portMappings = [{
        protocol      = "tcp"

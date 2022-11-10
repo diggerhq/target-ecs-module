@@ -130,17 +130,6 @@ variable "ecs_autoscale_max_instances" {
   default = "8"
 }
 
-# The default docker image to deploy with the infrastructure.
-# Note that you can use the fargate CLI for application concerns
-# like deploying actual application images and environment variables
-# on top of the infrastructure provisioned by this template
-# https://github.com/turnerlabs/fargate
-# note that the source for the turner default backend image is here:
-# https://github.com/turnerlabs/turner-defaultbackend
-variable "default_backend_image" {
-  default = "quay.io/turner/turner-defaultbackend:0.2.0"
-}
-
 variable "task_cpu" {
   default = "256"
 }
