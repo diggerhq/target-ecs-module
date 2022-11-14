@@ -140,7 +140,6 @@ resource "aws_security_group_rule" "ingress_lb_http" {
 
 {% if enable_https_listener %}
 resource "aws_alb_listener" "https" {
-  count = var.lb_ssl_certificate_arn==null ? 0 : 1
   load_balancer_arn = aws_alb.main.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -153,8 +152,7 @@ resource "aws_alb_listener" "https" {
 }
 
 resource "aws_alb_listener_certificate" "lb_listener_cert" {
-   count = var.lb_ssl_certificate_arn==null ? 0 : 1
-   listener_arn = aws_alb_listener.https[0].arn
+   listener_arn = aws_alb_listener.https.arn
    certificate_arn   = var.lb_ssl_certificate_arn
 }
 
