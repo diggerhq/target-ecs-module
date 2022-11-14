@@ -36,12 +36,6 @@ variable "public_subnets" {
 variable "container_port" {
 }
 
-variable "ecs_task_policy_json" {
-}
-
-variable "ecs_task_execution_policy_json" {
-}
-
 # The tag mutability setting for the repository (defaults to IMMUTABLE)
 variable "image_tag_mutability" {
   type        = string

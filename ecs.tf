@@ -154,11 +154,11 @@ EOF
 }
 
 resource "aws_iam_policy" "ecs_task_execution_policy" {
-  policy = var.ecs_task_execution_policy_json
+  policy = jsondecode(file("${path.module}/ecs_task_execution_policy.json"))
 }
 
 resource "aws_iam_policy" "ecs_task_policy" {
-  policy = var.ecs_task_policy_json
+  policy = jsondecode(file("${path.module}/ecs_policy.json"))
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy_attachment" {
