@@ -128,6 +128,17 @@ resource "aws_alb_listener" "http" {
   }
 }
 
+resource "aws_security_group_rule" "ingress_lb_http" {
+  type              = "ingress"
+  description       = var.lb_protocol
+  from_port         = var.lb_port
+  to_port           = var.lb_port
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.lb_sg.id
+}
+
+{% if enable_https_listener %}
 resource "aws_alb_listener" "https" {
   count = var.lb_ssl_certificate_arn==null ? 0 : 1
   load_balancer_arn = aws_alb.main.arn
@@ -147,16 +158,6 @@ resource "aws_alb_listener_certificate" "lb_listener_cert" {
    certificate_arn   = var.lb_ssl_certificate_arn
 }
 
-resource "aws_security_group_rule" "ingress_lb_http" {
-  type              = "ingress"
-  description       = var.lb_protocol
-  from_port         = var.lb_port
-  to_port           = var.lb_port
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.lb_sg.id
-}
-
 resource "aws_security_group_rule" "ingress_lb_https" {
   type              = "ingress"
   description       = var.lb_ssl_protocol
@@ -166,5 +167,5 @@ resource "aws_security_group_rule" "ingress_lb_https" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.lb_sg.id
 }
-
+{% endif %}
 {% endif %}
