@@ -1,5 +1,5 @@
 /*
- * variables.tf
+ * variables.template.tf
  * Common variables to use in various Terraform files (*.tf)
  */
 
@@ -202,6 +202,10 @@ variable "target_response_time_threshold" {
   default = 1
 }
 
+{% if lb_monitoring_enabled %}
+
 variable "target_group_arn_suffix" {}
 
 variable "alb_arn_suffix" {}
+
+{% endif %}
