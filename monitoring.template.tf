@@ -77,7 +77,7 @@ locals {
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "httpcode_target_3xx_count_high" {
+resource "aws_cloudwatch_metric_alarm" "http_code_target_3xx_count_high" {
   alarm_name          = "${var.ecs_service_name}_lb_target_3xx_count_high"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = local.http_error_code_count_high_evaluation_periods
@@ -95,7 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_target_3xx_count_high" {
   tags          = var.tags
 }
 
-resource "aws_cloudwatch_metric_alarm" "httpcode_target_4xx_count_high" {
+resource "aws_cloudwatch_metric_alarm" "http_code_target_4xx_count_high" {
   alarm_name          = "${var.ecs_service_name}_lb_target_4xx_count_high"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = local.http_error_code_count_high_evaluation_periods
@@ -113,7 +113,7 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_target_4xx_count_high" {
   tags          = var.tags
 }
 
-resource "aws_cloudwatch_metric_alarm" "httpcode_target_5xx_count_high" {
+resource "aws_cloudwatch_metric_alarm" "http_code_target_5xx_count_high" {
   alarm_name          = "${var.ecs_service_name}_lb_target_5xx_count_high"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = local.http_error_code_count_high_evaluation_periods
@@ -131,7 +131,7 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_target_5xx_count_high" {
   tags          = var.tags
 }
 
-resource "aws_cloudwatch_metric_alarm" "httpcode_elb_5xx_count_high" {
+resource "aws_cloudwatch_metric_alarm" "http_code_elb_5xx_count_high" {
   alarm_name          = "${var.ecs_service_name}_elb_5xx_count_high"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = local.http_error_code_count_high_evaluation_periods

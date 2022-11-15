@@ -26,3 +26,20 @@ output "lb_zone_id" {
 output "docker_registry_url" {
   value = aws_ecr_repository.app.repository_url
 }
+
+{% if monitoring_enabled %}
+output "monitoring" {
+  alarms = [aws_cloudwatch_metric_alarm.cpu_utilization_high.name, aws_cloudwatch_metric_alarm.memory_utilization_high.name]
+}
+{% endif %}
+
+{% if lb_monitoring_enabled %}
+output "lb_monitoring" {
+  alarms = [aws_cloudwatch_metric_alarm.http_code_target_3xx_count_high.name,
+  aws_cloudwatch_metric_alarm.http_code_target_4xx_count_high.name,
+  aws_cloudwatch_metric_alarm.http_code_target_5xx_count_high.name,
+  aws_cloudwatch_metric_alarm.http_code_elb_5xx_count_high.name,
+  aws_cloudwatch_metric_alarm.target_response_time_average_high.name,
+]
+}
+{% endif %}
