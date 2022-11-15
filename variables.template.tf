@@ -181,6 +181,7 @@ variable "logs_retention_in_days" {
   description = "Specifies the number of days you want to retain log events"
 }
 
+{% if lb_monitoring_enabled %}
 
 variable "target_3xx_count_threshold" {
   default = 5
@@ -201,3 +202,32 @@ variable "elb_5xx_count_threshold" {
 variable "target_response_time_threshold" {
   default = 1
 }
+{% endif %}
+
+{% if monitoring_enabled %}
+
+variable "cpu_utilization_high_threshold" {
+  default = 80
+}
+
+variable "memory_utilization_high_threshold" {
+  default = 100
+}
+
+variable "cpu_utilization_high_evaluation_periods" {
+  default = 1
+}
+
+variable "cpu_utilization_high_period" {
+  default = 60
+}
+
+variable "memory_utilization_high_evaluation_periods" {
+  default = 1
+}
+
+variable "memory_utilization_high_period" {
+  default = 60
+}
+
+{% endif %}
