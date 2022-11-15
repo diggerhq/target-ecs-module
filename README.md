@@ -5,8 +5,8 @@ Jinja parameters:
 
 
 parameters controlling behaviour (Booleans):
-is_monitoring_enabled
-is_lb_monitoring_enabled
+monitoring_enabled
+lb_monitoring_enabled
 tcp_service
 load_balancer
 auto_scaling_enabled

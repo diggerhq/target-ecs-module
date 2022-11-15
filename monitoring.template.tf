@@ -1,4 +1,4 @@
-{% if is_monitoring_enabled %}
+{% if monitoring_enabled %}
 
 locals {
   cpu_utilization_high_threshold             = 80
@@ -59,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "memory_utilization_high" {
 }
 
 {% endif %}
-{% if is_lb_monitoring_enabled %}
+{% if lb_monitoring_enabled %}
 
 locals {
   http_error_code_count_high_evaluation_periods = 1
