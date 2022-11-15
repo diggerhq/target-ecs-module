@@ -201,11 +201,3 @@ variable "elb_5xx_count_threshold" {
 variable "target_response_time_threshold" {
   default = 1
 }
-
-{% if lb_monitoring_enabled %}
-
-variable "target_group_arn_suffix" {}
-
-variable "alb_arn_suffix" {}
-
-{% endif %}
