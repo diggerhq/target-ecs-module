@@ -106,11 +106,13 @@ resource "aws_ecs_service" "app" {
     assign_public_ip = !var.internal
   }
 
+  {% if load_balancer %}
   load_balancer {
     target_group_arn = aws_alb_target_group.main.id
     container_name   = var.ecs_service_name
     container_port   = var.container_port
   }
+  {% endif %}
 
   # workaround for https://github.com/hashicorp/terraform/issues/12634
   #depends_on = [aws_alb_listener.]
