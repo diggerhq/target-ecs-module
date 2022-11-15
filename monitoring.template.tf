@@ -75,12 +75,12 @@ locals {
   }
 
   target_group_dimensions_map = {
-    "TargetGroup"  = var.target_group_arn_suffix
-    "LoadBalancer" = var.alb_arn_suffix
+    "TargetGroup"  = aws_alb_target_group.main.arn_suffix
+    "LoadBalancer" = aws_alb.main.arn_suffix
   }
 
   load_balancer_dimensions_map = {
-    "LoadBalancer" = var.alb_arn_suffix
+    "LoadBalancer" = aws_alb.main.arn_suffix
   }
 }
 
