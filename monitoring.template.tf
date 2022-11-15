@@ -22,8 +22,8 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_high" {
   statistic           = "Average"
   threshold           = var.cpu_utilization_high_threshold
   alarm_description   = "CPU High for ECS service ${var.ecs_service_name}"
-  alarm_actions       = [var.alarms_sns_topic_arn]
-  ok_actions          = [var.alarms_sns_topic_arn]
+  alarm_actions       = var.alarms_actions
+  ok_actions          = var.ok_actions
   dimensions = {
     "ClusterName" = var.ecs_cluster_name
     "ServiceName" = var.ecs_service_name
@@ -41,8 +41,8 @@ resource "aws_cloudwatch_metric_alarm" "memory_utilization_high" {
   statistic           = "Average"
   threshold           = var.memory_utilization_high_threshold
   alarm_description   = "Memory High for ECS service ${var.ecs_service_name}"
-  alarm_actions       = [var.alarms_sns_topic_arn]
-  ok_actions          = [var.alarms_sns_topic_arn]
+  alarm_actions       = var.alarms_actions
+  ok_actions          = var.ok_actions
 
   dimensions = {
     "ClusterName" = var.ecs_cluster_name
@@ -89,8 +89,8 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_target_3xx_count_high" {
   treat_missing_data  = local.treat_missing_data
   alarm_description   = "HTTP code 3xx is high for ${var.ecs_service_name}'s lb target over ${local.thresholds["target_response_time"]} last ${local.http_error_code_count_high_period} minute(s) over ${local.http_error_code_count_high_evaluation_periods} period(s)"
 
-  alarm_actions = [var.alarms_sns_topic_arn]
-  ok_actions    = [var.alarms_sns_topic_arn]
+  alarm_actions       = var.alarms_actions
+  ok_actions          = var.ok_actions
   dimensions    = local.target_group_dimensions_map
   tags          = var.tags
 }
@@ -107,8 +107,8 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_target_4xx_count_high" {
   treat_missing_data  = local.treat_missing_data
   alarm_description   = "HTTP code 4xx is high for ${var.ecs_service_name}'s lb target over ${local.thresholds["target_response_time"]} last ${local.http_error_code_count_high_period} minute(s) over ${local.http_error_code_count_high_evaluation_periods} period(s)"
 
-  alarm_actions = [var.alarms_sns_topic_arn]
-  ok_actions    = [var.alarms_sns_topic_arn]
+  alarm_actions       = var.alarms_actions
+  ok_actions          = var.ok_actions
   dimensions    = local.target_group_dimensions_map
   tags          = var.tags
 }
@@ -125,8 +125,8 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_target_5xx_count_high" {
   treat_missing_data  = local.treat_missing_data
   alarm_description   = "HTTP code 5xx is high for ${var.ecs_service_name}'s lb target over ${local.thresholds["target_response_time"]} last ${local.http_error_code_count_high_period} minute(s) over ${local.http_error_code_count_high_evaluation_periods} period(s)"
 
-  alarm_actions = [var.alarms_sns_topic_arn]
-  ok_actions    = [var.alarms_sns_topic_arn]
+  alarm_actions       = var.alarms_actions
+  ok_actions          = var.ok_actions
   dimensions    = local.target_group_dimensions_map
   tags          = var.tags
 }
@@ -143,8 +143,8 @@ resource "aws_cloudwatch_metric_alarm" "httpcode_elb_5xx_count_high" {
   treat_missing_data  = local.treat_missing_data
   alarm_description   = "HTTP code 5xx is high for ${var.ecs_service_name}'s elb over ${local.thresholds["target_response_time"]} last ${local.http_error_code_count_high_period} minute(s) over ${local.http_error_code_count_high_evaluation_periods} period(s)"
 
-  alarm_actions = [var.alarms_sns_topic_arn]
-  ok_actions    = [var.alarms_sns_topic_arn]
+  alarm_actions       = var.alarms_actions
+  ok_actions          = var.ok_actions
   dimensions    = local.load_balancer_dimensions_map
   tags          = var.tags
 }
@@ -160,8 +160,8 @@ resource "aws_cloudwatch_metric_alarm" "target_response_time_average_high" {
   threshold           = local.thresholds["target_response_time"]
   treat_missing_data  = local.treat_missing_data
   alarm_description   = "Target Response Time average is high for ${var.ecs_service_name} over ${local.thresholds["target_response_time"]} last ${local.http_error_code_count_high_period} minute(s) over ${local.http_error_code_count_high_evaluation_periods} period(s)"
-  alarm_actions       = [var.alarms_sns_topic_arn]
-  ok_actions          = [var.alarms_sns_topic_arn]
+  alarm_actions       = var.alarms_actions
+  ok_actions          = var.ok_actions
   dimensions          = local.target_group_dimensions_map
   tags                = var.tags
 }
