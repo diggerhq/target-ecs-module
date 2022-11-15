@@ -180,3 +180,28 @@ variable "logs_retention_in_days" {
   default     = 14
   description = "Specifies the number of days you want to retain log events"
 }
+
+
+variable "target_3xx_count_threshold" {
+  default = 5
+}
+
+variable "target_4xx_count_threshold" {
+  default = 5
+}
+
+variable "target_5xx_count_threshold" {
+  default = 5
+}
+
+variable "elb_5xx_count_threshold" {
+  default = 5
+}
+
+variable "target_response_time_threshold" {
+  default = 1
+}
+
+variable "target_group_arn_suffix" {}
+
+variable "alb_arn_suffix" {}
