@@ -57,10 +57,10 @@ resource "aws_ecs_task_definition" "app" {
       name  = variable.key
       value = tostring(variable.value)
     }])
-  secrets = [for secret in aws_ssm_parameter.secrets : {
-    name      = secret.name
-    valueFrom = secret.arn
-  }]
+    secrets = [for secret in var.secret_keys : {
+      name      = aws_ssm_parameter.secrets[secret].name
+      valueFrom = aws_ssm_parameter.secrets[secret].arn
+    }]
 
   logConfiguration = {
     logDriver = "awslogs"
