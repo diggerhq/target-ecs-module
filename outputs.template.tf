@@ -24,7 +24,7 @@ output "lb_zone_id" {
 {% endif %}
 
 output "docker_registry_url" {
-  value = aws_ecr_repository.app.repository_url
+  value = aws_ecr_repository.ecr_repo.repository_url
 }
 
 {% if monitoring_enabled %}

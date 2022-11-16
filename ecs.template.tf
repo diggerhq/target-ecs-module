@@ -14,7 +14,7 @@
 
 locals {
   awsloggroup     = "/ecs/service/${var.ecs_service_name}"
-  container_image = aws_ecr_repository.app.repository_url
+  container_image = aws_ecr_repository.ecr_repo.repository_url
 }
 
 resource "aws_appautoscaling_target" "app_scale_target" {
@@ -36,7 +36,7 @@ resource "aws_ecs_task_definition" "app" {
   task_role_arn = aws_iam_role.ecs_task_role.arn
   container_definitions = jsonencode([{
   name      = var.ecs_service_name
-  image     = aws_ecr_repository.app.repository_url
+  image     = aws_ecr_repository.ecr_repo.repository_url
   essential = true
   portMappings = [{
     protocol      = "tcp"
