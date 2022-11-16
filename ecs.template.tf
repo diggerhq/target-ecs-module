@@ -58,7 +58,7 @@ resource "aws_ecs_task_definition" "app" {
       value = tostring(variable.value)
     }])
     secrets = [for secret in var.secret_keys : {
-      name      = aws_ssm_parameter.secrets[secret].name
+      name      = secret
       valueFrom = aws_ssm_parameter.secrets[secret].arn
     }]
 
