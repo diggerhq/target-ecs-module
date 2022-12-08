@@ -53,13 +53,14 @@ resource "aws_ecs_task_definition" "app" {
       value = tostring(var.health_check)
     }
   ],
-    [for variable in var.environment_variables : {
-      name  = variable.key
-      value = tostring(variable.value)
+    [for e in var.environment_variables : {
+      name  = e.key
+      value = tostring(e.value)
     }])
-    secrets = [for secret in var.secret_keys : {
-      name      = secret
-      valueFrom = aws_ssm_parameter.secrets[secret].arn
+
+    secrets = [for s in var.secrets : {
+      name      = s.key
+      valueFrom = s.value
     }]
 
   logConfiguration = {
@@ -179,13 +180,3 @@ resource "aws_cloudwatch_log_group" "logs" {
   tags              = var.tags
 }
 
-resource "aws_ssm_parameter" "secrets" {
-  for_each = var.secret_keys
-  name        = "/${var.ecs_service_name}/${each.key}"
-  description = "Secret for ${var.ecs_service_name}"
-  type        = "SecureString"
-  value       = "REPLACE_ME"
-  lifecycle {
-    ignore_changes = [value]
-  }
-}
