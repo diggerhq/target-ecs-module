@@ -30,9 +30,10 @@ variable "ok_actions" {
 }
 
 # Network configuration
-
+{% if load_balancer %}
 variable "container_port" {
 }
+{% endif %}
 
 # The tag mutability setting for the repository (defaults to IMMUTABLE)
 variable "image_tag_mutability" {
