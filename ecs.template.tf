@@ -39,15 +39,15 @@ resource "aws_ecs_task_definition" "app" {
   image     = "${aws_ecr_repository.ecr_repo.repository_url}:latest"
   essential = true
 
-
-    {% if load_balancer %}
+{% if load_balancer %}
   portMappings = [{
     protocol      = "tcp"
     containerPort = var.container_port
     hostPort      = var.container_port
   }]
-    {% endif %}
-  environment = [for e in var.environment_variables : {
+{% endif %}
+
+    environment = [for e in var.environment_variables : {
       name  = e.key
       value = tostring(e.value)
     }]

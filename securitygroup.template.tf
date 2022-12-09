@@ -19,6 +19,7 @@ resource "aws_security_group" "ecs_task_sg" {
 
 # Rules for the LB (Targets the task SG)
 
+{% if load_balancer %}
 
 resource "aws_security_group_rule" "lb_egress_rule" {
   description              = "Only allow SG ${var.ecs_cluster_name}-lb to connect to ${var.ecs_cluster_name}-task on port ${var.container_port}"
@@ -42,6 +43,7 @@ resource "aws_security_group_rule" "ecs_task_ingress_rule" {
   security_group_id = aws_security_group.ecs_task_sg.id
 }
 
+{% endif %}
 resource "aws_security_group_rule" "ecs_task_egress_rule" {
   description = "Allows task to establish connections to all resources"
   type        = "egress"
