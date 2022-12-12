@@ -191,7 +191,7 @@ variable "logs_retention_in_days" {
   description = "Specifies the number of days you want to retain log events"
 }
 
-{% if lb_monitoring_enabled %}
+{% if monitoring_enabled and load_balancer %}
 
 variable "target_3xx_count_threshold" {
   default = 5
