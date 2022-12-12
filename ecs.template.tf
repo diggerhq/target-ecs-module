@@ -93,7 +93,6 @@ resource "aws_ecs_service" "app" {
   launch_type                       = var.launch_type
   task_definition                   = aws_ecs_task_definition.app.arn
   desired_count                     = var.ecs_autoscale_min_instances
-  health_check_grace_period_seconds = var.health_check_grace_period_seconds
 
   network_configuration {
     security_groups  = concat([aws_security_group.ecs_task_sg.id], var.service_security_groups)
@@ -102,6 +101,8 @@ resource "aws_ecs_service" "app" {
   }
 
   {% if load_balancer %}
+
+  health_check_grace_period_seconds = var.health_check_grace_period_seconds
   load_balancer {
     target_group_arn = aws_alb_target_group.main.id
     container_name   = var.ecs_service_name
