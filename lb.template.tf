@@ -1,4 +1,4 @@
-{% if load_balancer %}
+{% if load_balancer is defined and load_balancer %}
 
 resource "aws_alb" "main" {
   name = var.ecs_service_name
