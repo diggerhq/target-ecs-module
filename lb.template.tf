@@ -155,10 +155,6 @@ resource "aws_alb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
-
-  lifecycle {
-    ignore_changes = [port, protocol, default_action]
-  }
 }
 resource "aws_alb_listener" "https" {
   load_balancer_arn = aws_alb.main.arn
