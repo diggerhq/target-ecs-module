@@ -52,7 +52,7 @@ resource "aws_cloudwatch_metric_alarm" "memory_utilization_high" {
 }
 
 {% endif %}
-{% if load_balancer is defined and load_balancer %}
+{% if load_balancer and monitoring_enabled %}
 
 locals {
   http_error_code_count_high_evaluation_periods = 1
