@@ -39,6 +39,8 @@ resource "aws_ecs_task_definition" "app" {
   image     = "${aws_ecr_repository.ecr_repo.repository_url}:latest"
   essential = true
 
+
+
 {% if load_balancer %}
   portMappings = [{
     protocol      = "tcp"
@@ -58,18 +60,46 @@ resource "aws_ecs_task_definition" "app" {
     }]
 
   logConfiguration = {
+{% if datadog_enabled %}
     logDriver = "awslogs"
     options = {
       "awslogs-group"         = local.awsloggroup
       "awslogs-region"        = var.region
       "awslogs-stream-prefix" = "ecs"
     }
+{% elif %}
+   logDriver: "awsfirelens",
+    options: {
+        Name: "datadog",
+        apiKey: var.datadog_key,
+        dd_service: "my-httpd-service",
+        dd_source: "httpd",
+        dd_tags: "project:example",
+        TLS: "on",
+        provider: "ecs"
+    }
+{% endif %}
   }
   mountPoints = [for mountPoint in var.mountPoints: {
     containerPath = mountPoint.path
     sourceVolume  = mountPoint.volume
   }]
-  }])
+  }
+{% if datadog_enabled %}
+  ,
+  {
+    essential: true,
+    image: "amazon/aws-for-fluent-bit:latest",
+    name: "log_router",
+    firelensConfiguration: {
+	    type: "fluentbit",
+	    options: {
+		    enable-ecs-log-metadata: "true"
+	    }
+    }
+  }
+{% endif %}
+  ])
 
   dynamic "volume" {
     for_each = var.volumes
