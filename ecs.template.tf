@@ -63,7 +63,7 @@ resource "aws_ecs_task_definition" "app" {
     options: {
         Name: "datadog",
         apiKey: var.datadog_key,
-        Host: "http-intake.logs.datadoghq.com",
+        Host: "aws-kinesis-http-intake.logs.datadoghq.eu",
         TLS: "on",
         dd_service: "my-httpd-service",
         dd_source: "httpd",
