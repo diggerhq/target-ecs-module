@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "app" {
     },
     secretOptions: [{
       "name": "apikey",
-      "valueFrom": var.secrets["DATADOG_KEY"]
+      "valueFrom": var.datadog_key_ssm_arn
     }]
 {% else %}
     logDriver: "awslogs"

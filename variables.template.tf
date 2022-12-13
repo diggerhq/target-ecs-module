@@ -243,7 +243,6 @@ variable "memory_utilization_high_period" {
 {% endif %}
 
 {% if datadog_enabled %}
-variable "datadog_key" {
-  sensitive=true
+variable "datadog_key_ssm_arn" {
 }
 {% endif %}
