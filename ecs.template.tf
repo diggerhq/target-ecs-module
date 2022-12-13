@@ -73,10 +73,10 @@ resource "aws_ecs_task_definition" "app" {
     },
 {% else %}
     logDriver = "awslogs"
-    options = {
-      "awslogs-group"         = local.awsloggroup
-      "awslogs-region"        = var.region
-      "awslogs-stream-prefix" = "ecs"
+    options: {
+      awslogs-group: local.awsloggroup
+      awslogs-region: var.region
+      awslogs-stream-prefix: "ecs"
     }
 {% endif %}
   }
@@ -97,11 +97,11 @@ resource "aws_ecs_task_definition" "app" {
 		    enable-ecs-log-metadata: "true"
 	    }
     },
-    logDriver = "awslogs",
-    options = {
-      "awslogs-group"         = local.awsloggroup,
-      "awslogs-region"        = var.region,
-      "awslogs-stream-prefix" = "fluentbit",
+    logDriver: "awslogs",
+    options: {
+      awslogs-group: local.awsloggroup,
+      awslogs-region: var.region,
+      awslogs-stream-prefix: "fluentbit",
     }
   }
 {% endif %}
