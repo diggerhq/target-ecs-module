@@ -97,7 +97,7 @@ resource "aws_ecs_task_definition" "app" {
 		    enable-ecs-log-metadata: "true"
 	    }
     }
-    logDriver = "awslogs"
+    logDriver = "awslogs",
     options = {
       "awslogs-group"         = local.awsloggroup
       "awslogs-region"        = var.region
