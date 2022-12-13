@@ -39,8 +39,6 @@ resource "aws_ecs_task_definition" "app" {
   image     = "${aws_ecr_repository.ecr_repo.repository_url}:latest"
   essential = true
 
-
-
 {% if load_balancer %}
   portMappings = [{
     protocol      = "tcp"
@@ -66,12 +64,13 @@ resource "aws_ecs_task_definition" "app" {
         Name: "datadog",
         apiKey: var.datadog_key,
         Host: "http-intake.logs.datadoghq.com",
-        dd_service: "digger-${var.ecs_cluster_name}",
-        dd_source: "httpd",
-        dd_tags: "project:digger",
         TLS: "on",
-        provider: "ecs"
-    }
+        dd_service: "my-httpd-service",
+        dd_source: "httpd",
+        dd_tags: "project:example",
+        provider: "ecs",
+        retry_limit: "2"
+    },
 {% else %}
     logDriver = "awslogs"
     options = {
