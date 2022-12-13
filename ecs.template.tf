@@ -99,9 +99,9 @@ resource "aws_ecs_task_definition" "app" {
     },
     logDriver = "awslogs",
     options = {
-      "awslogs-group"         = local.awsloggroup
-      "awslogs-region"        = var.region
-      "awslogs-stream-prefix" = "fluentbit"
+      "awslogs-group"         = local.awsloggroup,
+      "awslogs-region"        = var.region,
+      "awslogs-stream-prefix" = "fluentbit",
     }
   }
 {% endif %}
