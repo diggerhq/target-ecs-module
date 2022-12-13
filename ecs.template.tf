@@ -62,7 +62,6 @@ resource "aws_ecs_task_definition" "app" {
     logDriver: "awsfirelens",
     options: {
         Name: "datadog",
-        apiKey: var.datadog_key,
         Host: "aws-kinesis-http-intake.logs.datadoghq.eu",
         TLS: "on",
         dd_service: "my-httpd-service",
@@ -70,7 +69,11 @@ resource "aws_ecs_task_definition" "app" {
         dd_tags: "project:example",
         provider: "ecs",
         retry_limit: "2"
-    }
+    },
+    secretOptions: [{
+      "name": "apikey",
+      "valueFrom": secrets["DATADOG_KEY"]
+    }]
 {% else %}
     logDriver: "awslogs"
     options: {
