@@ -65,7 +65,7 @@ resource "aws_ecs_task_definition" "app" {
     options: {
         Name: "datadog",
         apiKey: var.datadog_key,
-        dd_service: "digger-%{var.ecs_cluster_name}",
+        dd_service: "digger-${var.ecs_cluster_name}",
         dd_source: "httpd",
         dd_tags: "project:digger",
         TLS: "on",
