@@ -61,14 +61,7 @@ resource "aws_ecs_task_definition" "app" {
 
   logConfiguration = {
 {% if datadog_enabled %}
-    logDriver = "awslogs"
-    options = {
-      "awslogs-group"         = local.awsloggroup
-      "awslogs-region"        = var.region
-      "awslogs-stream-prefix" = "ecs"
-    }
-{% else %}
-   logDriver: "awsfirelens",
+    logDriver: "awsfirelens",
     options: {
         Name: "datadog",
         apiKey: var.datadog_key,
@@ -77,6 +70,13 @@ resource "aws_ecs_task_definition" "app" {
         dd_tags: "project:example",
         TLS: "on",
         provider: "ecs"
+    }
+{% else %}
+    logDriver = "awslogs"
+    options = {
+      "awslogs-group"         = local.awsloggroup
+      "awslogs-region"        = var.region
+      "awslogs-stream-prefix" = "ecs"
     }
 {% endif %}
   }
