@@ -88,7 +88,7 @@ resource "aws_ecs_task_definition" "app" {
 {% if datadog_enabled %}
   ,
   {
-    essential: true,
+    essential: false,
     image: "amazon/aws-for-fluent-bit:latest",
     name: "log_router",
     firelensConfiguration: {
