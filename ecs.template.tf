@@ -61,7 +61,7 @@ resource "aws_ecs_task_definition" "app" {
 
   logConfiguration = {
 {% if datadog_enabled %}
-    logDriver: "awslogs",
+    logDriver: "awsfirelens",
     options: {
         Name: "datadog",
         apiKey: var.datadog_key,
