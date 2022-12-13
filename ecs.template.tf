@@ -70,9 +70,9 @@ resource "aws_ecs_task_definition" "app" {
         dd_tags: "project:example",
         provider: "ecs",
         retry_limit: "2"
-    },
+    }
 {% else %}
-    logDriver = "awslogs"
+    logDriver: "awslogs"
     options: {
       awslogs-group: local.awsloggroup
       awslogs-region: var.region
@@ -97,11 +97,13 @@ resource "aws_ecs_task_definition" "app" {
 		    enable-ecs-log-metadata: "true"
 	    }
     },
-    logDriver: "awslogs",
-    options: {
-      awslogs-group: local.awsloggroup,
-      awslogs-region: var.region,
-      awslogs-stream-prefix: "fluentbit",
+    logConfiguration = {
+      logDriver : "awslogs",
+      options : {
+        awslogs-group : local.awsloggroup,
+        awslogs-region : var.region,
+        awslogs-stream-prefix : "fluentbit"
+      }
     }
   }
 {% endif %}
