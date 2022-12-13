@@ -65,6 +65,7 @@ resource "aws_ecs_task_definition" "app" {
     options: {
         Name: "datadog",
         apiKey: var.datadog_key,
+        Host: "http-intake.logs.datadoghq.com",
         dd_service: "digger-${var.ecs_cluster_name}",
         dd_source: "httpd",
         dd_tags: "project:digger",
