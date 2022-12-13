@@ -67,7 +67,7 @@ resource "aws_ecs_task_definition" "app" {
       "awslogs-region"        = var.region
       "awslogs-stream-prefix" = "ecs"
     }
-{% elif %}
+{% else %}
    logDriver: "awsfirelens",
     options: {
         Name: "datadog",
