@@ -96,7 +96,7 @@ resource "aws_ecs_task_definition" "app" {
 	    options: {
 		    enable-ecs-log-metadata: "true"
 	    }
-    }
+    },
     logDriver = "awslogs",
     options = {
       "awslogs-group"         = local.awsloggroup
