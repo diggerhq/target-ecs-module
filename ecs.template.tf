@@ -64,9 +64,8 @@ resource "aws_ecs_task_definition" "app" {
         Name: "datadog",
         Host: "aws-kinesis-http-intake.logs.datadoghq.eu",
         TLS: "on",
-        dd_service: "my-httpd-service",
+        dd_service: var.ecs_service_name,
         dd_source: "httpd",
-        dd_tags: "project:example",
         provider: "ecs",
         retry_limit: "2"
     },
