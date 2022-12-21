@@ -57,7 +57,10 @@ resource "aws_ecs_task_definition" "app" {
       name  = variable.key
       value = tostring(variable.value)
     }])
-    secrets = var.secrets
+    secrets = [for secret in var.secrets : {
+      name      = secret.key
+      valueFrom = secret.value
+    }]
 
   logConfiguration = {
     logDriver = "awslogs"
