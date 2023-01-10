@@ -57,9 +57,9 @@ resource "aws_ecs_task_definition" "app" {
       name  = variable.key
       value = tostring(variable.value)
     }])
-    secrets = [for secret in var.secret_keys : {
-      name      = secret
-      valueFrom = aws_ssm_parameter.secrets[secret].arn
+    secrets = [for secret in var.secrets : {
+      name      = secret.key
+      valueFrom = secret.value
     }]
 
   logConfiguration = {
