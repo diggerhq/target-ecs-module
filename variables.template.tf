@@ -30,9 +30,10 @@ variable "ok_actions" {
 }
 
 # Network configuration
-
+{% if load_balancer %}
 variable "container_port" {
 }
+{% endif %}
 
 # The tag mutability setting for the repository (defaults to IMMUTABLE)
 variable "image_tag_mutability" {
@@ -174,9 +175,12 @@ variable "environment_variables" {
   }))
 }
 
-variable "secret_keys" {
+variable "secrets" {
   default = []
-  type = set(string)
+  type = list(object({
+    key = string
+    value  = any
+  }))
 }
 
 variable "secrets" {
@@ -192,7 +196,7 @@ variable "logs_retention_in_days" {
   description = "Specifies the number of days you want to retain log events"
 }
 
-{% if lb_monitoring_enabled %}
+{% if monitoring_enabled and load_balancer %}
 
 variable "target_3xx_count_threshold" {
   default = 5
@@ -241,4 +245,9 @@ variable "memory_utilization_high_period" {
   default = 60
 }
 
+{% endif %}
+
+{% if datadog_enabled %}
+variable "datadog_key_ssm_arn" {
+}
 {% endif %}

@@ -34,7 +34,7 @@ output "monitoring_alarms" {
 }
 {% endif %}
 
-{% if lb_monitoring_enabled %}
+{% if load_balancer and monitoring_enabled %}
 output "lb_monitoring_alarms" {
   value = [aws_cloudwatch_metric_alarm.http_code_target_3xx_count_high.alarm_name,
   aws_cloudwatch_metric_alarm.http_code_target_4xx_count_high.alarm_name,

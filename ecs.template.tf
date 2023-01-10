@@ -38,43 +38,78 @@ resource "aws_ecs_task_definition" "app" {
   name      = var.ecs_service_name
   image     = "${aws_ecr_repository.ecr_repo.repository_url}:latest"
   essential = true
+
+{% if load_balancer %}
   portMappings = [{
     protocol      = "tcp"
     containerPort = var.container_port
     hostPort      = var.container_port
   }]
-  environment = concat([
-    {
-      name  = "PORT"
-      value = tostring(var.container_port)
-    },
-    {
-      name  = "HEALTHCHECK"
-      value = tostring(var.health_check)
-    }
-  ],
-    [for variable in var.environment_variables : {
-      name  = variable.key
-      value = tostring(variable.value)
-    }])
-    secrets = [for secret in var.secrets : {
-      name      = secret.key
-      valueFrom = secret.value
+{% endif %}
+
+    environment = [for e in var.environment_variables : {
+      name  = e.key
+      value = tostring(e.value)
+    }]
+
+    secrets = [for s in var.secrets : {
+      name      = s.key
+      valueFrom = s.value
     }]
 
   logConfiguration = {
-    logDriver = "awslogs"
-    options = {
-      "awslogs-group"         = local.awsloggroup
-      "awslogs-region"        = var.region
-      "awslogs-stream-prefix" = "ecs"
+{% if datadog_enabled %}
+    logDriver: "awsfirelens",
+    options: {
+        Name: "datadog",
+        Host: "aws-kinesis-http-intake.logs.datadoghq.eu",
+        TLS: "on",
+        dd_service: var.ecs_service_name,
+        dd_source: "httpd",
+        provider: "ecs",
+        retry_limit: "2"
+    },
+    secretOptions: [{
+      "name": "apikey",
+      "valueFrom": var.datadog_key_ssm_arn
+    }]
+{% else %}
+    logDriver: "awslogs"
+    options: {
+      awslogs-group: local.awsloggroup
+      awslogs-region: var.region
+      awslogs-stream-prefix: "ecs"
     }
+{% endif %}
   }
   mountPoints = [for mountPoint in var.mountPoints: {
     containerPath = mountPoint.path
     sourceVolume  = mountPoint.volume
   }]
-  }])
+  }
+{% if datadog_enabled %}
+  ,
+  {
+    essential: true,
+    image: "amazon/aws-for-fluent-bit:latest",
+    name: "log_router",
+    firelensConfiguration: {
+	    type: "fluentbit",
+	    options: {
+		    enable-ecs-log-metadata: "true"
+	    }
+    },
+    logConfiguration = {
+      logDriver : "awslogs",
+      options : {
+        awslogs-group : local.awsloggroup,
+        awslogs-region : var.region,
+        awslogs-stream-prefix : "fluentbit"
+      }
+    }
+  }
+{% endif %}
+  ])
 
   dynamic "volume" {
     for_each = var.volumes
@@ -98,7 +133,6 @@ resource "aws_ecs_service" "app" {
   launch_type                       = var.launch_type
   task_definition                   = aws_ecs_task_definition.app.arn
   desired_count                     = var.ecs_autoscale_min_instances
-  health_check_grace_period_seconds = var.health_check_grace_period_seconds
 
   network_configuration {
     security_groups  = concat([aws_security_group.ecs_task_sg.id], var.service_security_groups)
@@ -107,6 +141,8 @@ resource "aws_ecs_service" "app" {
   }
 
   {% if load_balancer %}
+
+  health_check_grace_period_seconds = var.health_check_grace_period_seconds
   load_balancer {
     target_group_arn = aws_alb_target_group.main.id
     container_name   = var.ecs_service_name
@@ -179,13 +215,3 @@ resource "aws_cloudwatch_log_group" "logs" {
   tags              = var.tags
 }
 
-resource "aws_ssm_parameter" "secrets" {
-  for_each = var.secret_keys
-  name        = "/${var.ecs_service_name}/${each.key}"
-  description = "Secret for ${var.ecs_service_name}"
-  type        = "SecureString"
-  value       = "REPLACE_ME"
-  lifecycle {
-    ignore_changes = [value]
-  }
-}
