@@ -88,7 +88,7 @@ variable "health_check_grace_period_seconds" {
 
 # What HTTP response code to listen for
 variable "health_check_matcher" {
-  default = "200"
+  default = "200-499"
 }
 
 variable "lb_access_logs_expiration_days" {
@@ -172,4 +172,16 @@ variable "logs_retention_in_days" {
   type        = number
   default     = 90
   description = "Specifies the number of days you want to retain log events"
+}
+
+variable "task_definition_environment" {
+}
+
+variable "task_definition_secrets" {
+}
+
+variable "ecs_task_policy_json" {
+}
+
+variable "ecs_task_execution_policy_json" {
 }

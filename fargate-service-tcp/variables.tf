@@ -69,6 +69,10 @@ variable "health_check_interval" {
   default = "30"
 }
 
+variable "health_check_matcher" {
+  default = "200-499"
+}
+
 variable "lb_access_logs_expiration_days" {
   default = "3"
 }

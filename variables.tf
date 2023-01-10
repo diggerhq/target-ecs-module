@@ -39,3 +39,20 @@ variable "public_subnets" {
 
 variable "container_port" {
 }
+
+variable "task_definition_environment" {
+  default = "[]"
+}
+
+variable "task_definition_secrets" {
+  default = "[]"
+}
+
+variable "ecs_task_policy_json" {
+}
+
+variable "ecs_task_execution_policy_json" {
+}
+
+variable "aws_app_identifier" {}
+

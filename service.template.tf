@@ -1,6 +1,6 @@
 
 locals {
-  aws_app_identifier = "{{aws_app_identifier}}"
+  aws_app_identifier = var.aws_app_identifier
 }
 
 module "monitoring" {
@@ -44,6 +44,10 @@ EOT
     health_check_interval = "{{health_check_interval}}"
     {% endif %}
 
+    {% if health_check_matcher %}
+    health_check_matcher = "{{health_check_matcher}}"
+    {% endif %}
+
     container_port = var.container_port
     container_name = local.aws_app_identifier
     launch_type = "{{launch_type}}"
@@ -69,10 +73,18 @@ EOT
     region = var.region
     service_vpc = local.vpc
     service_security_groups = []
-    subnet_ids = var.public_subnets
+    subnet_ids = var.private_subnets
+    ecs_task_policy_json = var.ecs_task_policy_json
+    ecs_task_execution_policy_json = var.ecs_task_execution_policy_json
+
 
     {%- if internal is defined %}
     internal={{ internal }}
+    {%- endif %}
+
+
+    {%- if alb_internal is defined %}
+    alb_internal={{ alb_internal }}
     {%- endif %}
 
     {% if environment_variables %}
@@ -86,7 +98,6 @@ EOT
     secret_keys = toset({{secret_keys | tojson}})
     {% endif %}
 
-    alb_internal = false
     alb_subnet_ids = var.public_subnets
 
     health_check = "{{health_check}}"

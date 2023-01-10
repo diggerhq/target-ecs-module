@@ -1,9 +1,3 @@
-# note that this creates the alb, target group, and access logs
-# the listeners are defined in lb-http.tf and lb-https.tf
-# delete either of these if your app doesn't need them
-# but you need at least one
-
-
 
 resource "aws_alb" "main" {
   name = var.service_name
@@ -87,7 +81,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "lb_access_logs_se
     }
   }
 }
-
 
 # give load balancing service access to the bucket
 resource "aws_s3_bucket_policy" "lb_access_logs" {

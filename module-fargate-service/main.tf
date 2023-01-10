@@ -31,7 +31,7 @@ resource "aws_ecs_task_definition" "app" {
   network_mode             = "awsvpc"
   cpu                      = var.task_cpu
   memory                   = var.task_memory
-  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
   task_role_arn = aws_iam_role.ecs_task_role.arn
   container_definitions = jsonencode([{
@@ -117,8 +117,8 @@ resource "aws_ecs_service" "app" {
 }
 
 # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
-resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name               = "${var.ecs_cluster.name}-${var.service_name}-ecs"
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name               = "${var.ecs_cluster.name}-task-exec-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -134,7 +134,7 @@ data "aws_iam_policy_document" "assume_role_policy" {
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name               = "${var.service_name}_task_role"
+  name               = "${var.service_name}-task-role"
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -153,51 +153,36 @@ EOF
 
 }
 
-resource "aws_iam_role_policy" "ecs_task_role_policy" {
-  name   = "${var.service_name}_task_role_policy"
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ecr:GetAuthorizationToken",
-        "ecr:BatchCheckLayerAvailability",
-        "ecr:GetDownloadUrlForLayer",
-        "ecr:BatchGetImage",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ssm:Describe*",
-        "ssm:Get*",
-        "ssm:List*"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-
-  role   = aws_iam_role.ecs_task_role.id
+resource "aws_iam_policy" "ecs_task_execution_policy" {
+  policy = var.ecs_task_execution_policy_json
 }
 
+resource "aws_iam_policy" "ecs_task_policy" {
+  policy = var.ecs_task_policy_json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy_attachment" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.ecs_task_execution_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_policy_attachment" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = aws_iam_policy.ecs_task_policy.arn
+}
+
+/*
 resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
-  role       = aws_iam_role.ecsTaskExecutionRole.name
+  role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 # provide access to read SSM secrets
 resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_ssm_policy" {
-  role       = aws_iam_role.ecsTaskExecutionRole.name
+  role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
 }
-
+*/
 
 resource "aws_cloudwatch_log_group" "logs" {
   name              = local.awsloggroup
