@@ -35,29 +35,29 @@ resource "aws_ecs_task_definition" "app" {
   # defined in role.tf
   # task_role_arn = aws_iam_role.app_role.arn
 
-  container_definitions = <<DEFINITION
-[
-  {
-    "name": "${var.container_name}",
-    "image": "${var.default_backend_image}",
-    "essential": true,
-    "portMappings": [
-    ],
-    "environment": [
-    ],
-    "logConfiguration": {
-      "logDriver": "awslogs",
-      "options": {
-        "awslogs-group": "${local.awsloggroup}",
-        "awslogs-region": "${var.region}",
-        "awslogs-stream-prefix": "ecs"
+  container_definitions = jsonencode([{
+    name      = var.container_name
+    image     = "${aws_ecr_repository.app.repository_url}:latest"
+    essential = true
+    portMappings = []
+    environment =
+      [for variable in var.environment_variables : {
+        name  = variable.key
+        value = tostring(variable.value)
+      }]
+    secrets = [for secret in aws_ssm_parameter.secrets : {
+      name      = secret.name
+      valueFrom = secret.arn
+    }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        "awslogs-group"         = local.awsloggroup
+        "awslogs-region"        = var.region
+        "awslogs-stream-prefix" = "ecs"
       }
     }
-  }
-]
-DEFINITION
-
-
+  }])
   tags = var.tags
 }
 
@@ -116,4 +116,15 @@ resource "aws_cloudwatch_log_group" "logs" {
   name              = local.awsloggroup
   retention_in_days = var.logs_retention_in_days
   tags              = var.tags
+}
+
+resource "aws_ssm_parameter" "secrets" {
+  for_each = var.secret_keys
+  name        = each.key
+  description = "Secret for ${var.service_name}"
+  type        = "SecureString"
+  value       = "REPLACE_ME"
+  lifecycle {
+    ignore_changes = [value]
+  }
 }

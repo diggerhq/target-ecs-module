@@ -12,5 +12,5 @@ output "vpc_id" {
 }
 
 output "security_group_ids" {
-  value = []
+  value = [module.service.ecs_task_security_group_id]
 }

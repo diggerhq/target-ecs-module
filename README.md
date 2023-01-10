@@ -2,7 +2,7 @@ This template is a fork of https://github.com/turnerlabs/terraform-ecs-fargate a
 
 
 Jinja parameters:
-
+```
 aws_app_identifier
 internal
 health_check
@@ -20,3 +20,4 @@ environment_config.ecs_autoscale_max_instances
 environment_config.lb_ssl_certificate_arn
 environment_config.dns_zone_id
 environment_config.hostname
+```
