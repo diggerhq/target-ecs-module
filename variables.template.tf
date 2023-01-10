@@ -183,11 +183,6 @@ variable "secrets" {
   }))
 }
 
-variable "secrets" {
-  default = []
-}
-
-
 # == Cloudwatch ==
 
 variable "logs_retention_in_days" {
