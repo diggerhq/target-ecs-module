@@ -47,20 +47,10 @@ resource "aws_ecs_task_definition" "app" {
   }]
 {% endif %}
 
-    environment = concat([
-      {
-        name  = "PORT"
-        value = tostring(var.container_port)
-      },
-      {
-        name  = "HEALTHCHECK"
-        value = tostring(var.health_check)
-      }
-    ],
-    [for variable in var.environment_variables : {
+    environment = [for variable in var.environment_variables : {
       name  = variable.key
       value = tostring(variable.value)
-    }])
+    }]
 
     secrets = [for s in var.secrets : {
       name      = s.key
