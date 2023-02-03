@@ -36,7 +36,7 @@ resource "aws_ecs_task_definition" "app" {
   task_role_arn = aws_iam_role.ecs_task_role.arn
   container_definitions = jsonencode([{
   name      = var.ecs_service_name
-  image     = "${aws_ecr_repository.ecr_repo.repository_url}:latest"
+  image     = "${aws_ecr_repository.ecr_repo.repository_url}:${var.ecr_image_tag}}"
   essential = true
 
 {% if load_balancer %}

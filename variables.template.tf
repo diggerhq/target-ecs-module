@@ -191,6 +191,11 @@ variable "logs_retention_in_days" {
   description = "Specifies the number of days you want to retain log events"
 }
 
+ variable "ecr_image_tag" {
+  default = "latest"
+}
+
+
 {% if monitoring_enabled and load_balancer %}
 
 variable "target_3xx_count_threshold" {
