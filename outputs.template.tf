@@ -5,19 +5,19 @@ output "ecs_task_security_group_id" {
 {% if load_balancer %}
 
 # The load balancer DNS name
-output "lb_dns" {
+output "alb_dns" {
   value = aws_alb.main.dns_name
 }
 
-output "lb_arn" {
+output "alb_arn" {
   value = aws_alb.main.arn
 }
 
-output "lb_http_listener_arn" {
+output "alb_http_listener_arn" {
   value = try(aws_alb_listener.http.arn, null)
 }
 
-output "lb_zone_id" {
+output "alb_zone_id" {
   value = aws_alb.main.zone_id
 }
 
