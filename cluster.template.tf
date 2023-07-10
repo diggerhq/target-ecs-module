@@ -1,3 +1,5 @@
+{{shared_ecs_cluster}}
+
 {% if shared_ecs_cluster is defined and shared_ecs_cluster %}
   data "aws_ecs_cluster" "ecs_cluster" {
     cluster_name = "{{shared_ecs_cluster}}"
