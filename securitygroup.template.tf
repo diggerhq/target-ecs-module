@@ -32,13 +32,13 @@ resource "aws_security_group_rule" "lb_egress_rule" {
 
 # Rules for the TASK (Targets the LB SG)
 resource "aws_security_group_rule" "ecs_task_ingress_rule" {
+  for_each                 = toset(var.service_security_groups)
   description              = "Only allow connections from SG ${var.ecs_cluster_name}-lb on port ${var.container_port}"
   type                     = "ingress"
   from_port                = var.container_port
   to_port                  = var.container_port
   protocol                 = "tcp"
-  source_security_group_id = aws_security_group.lb_sg.id
-
+  source_security_group_id = each.value
   security_group_id = aws_security_group.ecs_task_sg.id
 }
 
